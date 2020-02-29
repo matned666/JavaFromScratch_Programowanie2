@@ -18,6 +18,7 @@ public abstract class DoubleListener extends GenericListener<Double> {
         } catch (Exception ignored) {
 //                System.out.println(ignored.getMessage());
         }
+        showError();
         return null;
     }
 

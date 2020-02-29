@@ -11,6 +11,9 @@ import java.util.List;
 public abstract class DateListener extends GenericListener<LocalDate> {
     private static final List<DateTimeFormatter> FORMATS =
             Arrays.asList(
+                    DateTimeFormatter.ofPattern("d-M-yyyy"),
+                    DateTimeFormatter.ofPattern("dd-M-yyyy"),
+                    DateTimeFormatter.ofPattern("d-MM-yyyy"),
                     DateTimeFormatter.ofPattern("dd-MM-yyyy"),
                     DateTimeFormatter.ofPattern("dd.MM.yyyy"),
                     DateTimeFormatter.ofPattern("dd MM yyyy"),
@@ -33,6 +36,7 @@ public abstract class DateListener extends GenericListener<LocalDate> {
 //                System.out.println(ignored.getMessage());
             }
         }
+        showError();
         return null;
     }
 

@@ -1,6 +1,7 @@
 package pl.sda.rafal.zientara.programowanie2.lesson4.money;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Objects;
@@ -29,6 +30,7 @@ public abstract class GenericListener<Value> implements KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         String input = field.getText();
+        showNormal();
         Value value = parseValue(input);
 //        if (!Objects.equals(value, previousValue)) {
         System.out.println("Nowa wartosc!:" + value);
@@ -41,5 +43,13 @@ public abstract class GenericListener<Value> implements KeyListener {
     @Override
     public int hashCode() {
         return Objects.hash(field, previousValue);
+    }
+
+    protected void showNormal() {
+        field.setForeground(Color.BLACK);
+    }
+
+    protected void showError() {
+        field.setForeground(Color.RED);
     }
 }
