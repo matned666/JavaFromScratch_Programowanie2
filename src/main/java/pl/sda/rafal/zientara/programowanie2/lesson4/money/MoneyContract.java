@@ -7,6 +7,8 @@ public class MoneyContract {
 
     public interface View {
         void refreshList(List<Cost> data);
+
+        void refreshSum(double sum);
     }
 
     public interface Presenter {

@@ -98,4 +98,6 @@ class MoneyPresenterTest {
         assertEquals(17, lastResult.size());
     }
 
+    //todo napisz test do liczenia sumy
+
 }
