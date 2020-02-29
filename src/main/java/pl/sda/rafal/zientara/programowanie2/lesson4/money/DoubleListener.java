@@ -4,20 +4,14 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public abstract class DoubleListener implements KeyListener {
-
-    private final JTextField field;
+public abstract class DoubleListener extends GenericListener<Double> {
 
     public DoubleListener(JTextField field) {
-        this.field = field;
+        super(field);
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    private Double parseDouble(String input) {
+    public Double parseValue(String input) {
         System.out.println("Try parsing : " + input);
         try {
             return Double.parseDouble(input);
@@ -27,18 +21,4 @@ public abstract class DoubleListener implements KeyListener {
         return null;
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        String input = field.getText();
-        Double value = parseDouble(input);
-        System.out.println(value);
-        onValueUpdate(value);
-    }
-
-    public abstract void onValueUpdate(Double newValue);
 }

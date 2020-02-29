@@ -10,6 +10,7 @@ public class WhereIsMyMoney implements MoneyContract.View {
     private static final int FIELD_WIDTH = 400;
     private static final int FIELD_HEIGHT = 50;
     private static final int PADDING = 50;
+    private final JLabel sumLabel;
     private JFrame frame;
     private JTextField shopInput;
     private JTextField dateFrom;
@@ -55,8 +56,8 @@ public class WhereIsMyMoney implements MoneyContract.View {
         dateFrom.setBounds(PADDING, 150, 75, FIELD_HEIGHT);
         dateFrom.addKeyListener(new DateListener(dateFrom) {
             @Override
-            public void onDateUpdate(LocalDate newDate) {
-                presenter.onFromDateChange(newDate);
+            public void onValueUpdate(LocalDate newValue) {
+                presenter.onFromDateChange(newValue);
             }
         });
         frame.add(dateFrom);
@@ -65,7 +66,7 @@ public class WhereIsMyMoney implements MoneyContract.View {
         dateTo.setBounds(175, 150, 75, FIELD_HEIGHT);
         dateTo.addKeyListener(new DateListener(dateTo) {
             @Override
-            public void onDateUpdate(LocalDate newDate) {
+            public void onValueUpdate(LocalDate newDate) {
                 presenter.onToDateChange(newDate);
             }
         });
@@ -107,6 +108,10 @@ public class WhereIsMyMoney implements MoneyContract.View {
         results.setBounds(PADDING, 350, FIELD_WIDTH, 200);
         frame.add(results);
 
+        sumLabel = new JLabel();
+        sumLabel.setBounds(PADDING, 550, FIELD_WIDTH, FIELD_HEIGHT);
+        frame.add(sumLabel);
+
         frame.setVisible(true);
         presenter.prepareData();
         presenter.initData();
@@ -119,5 +124,10 @@ public class WhereIsMyMoney implements MoneyContract.View {
             list.addElement(cost);
         }
         results.setModel(list);
+    }
+
+    @Override
+    public void refreshSum(double sum) {
+        sumLabel.setText(String.format("Suma: %.2f", sum));
     }
 }

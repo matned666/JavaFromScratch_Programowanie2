@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -50,7 +51,7 @@ public class MoneyPresenter implements
 
     @Override
     public void initData() {
-        view.refreshList(costs);
+        refreshAndShow();
     }
 
     private Cost parseCost(String line) {
@@ -97,7 +98,28 @@ public class MoneyPresenter implements
 
     private void refreshAndShow() {
         refreshResults();
+        refreshUi();
+    }
+
+    private void refreshUi() {
         view.refreshList(lastResult);
+        view.refreshSum(countSum());
+    }
+
+    private double countSum() {
+        Optional<Double> reduce = lastResult.stream()
+                .map(cost -> cost.price)
+                .reduce((acc, value) -> acc + value);
+//        return reduce.orElse(0D);
+
+//        reduce.orElseThrow(NoChoclateBarsException());
+        return reduce.orElse(1231D);
+//        return reduce.orElseGet(() -> 0D);//dlugie procesy
+        /*if (reduce.isPresent()) {
+            return reduce.get();
+        } else {
+            return 0;
+        }*/
     }
 
     private void refreshResults() {

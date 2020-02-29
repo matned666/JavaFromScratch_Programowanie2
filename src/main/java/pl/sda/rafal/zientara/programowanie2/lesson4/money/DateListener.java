@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class DateListener implements KeyListener {
+public abstract class DateListener extends GenericListener<LocalDate> {
     private static final List<DateTimeFormatter> FORMATS =
             Arrays.asList(
                     DateTimeFormatter.ofPattern("dd-MM-yyyy"),
@@ -19,18 +19,12 @@ public abstract class DateListener implements KeyListener {
                     DateTimeFormatter.ofPattern("yyyy.MM.dd")
             );
 
-    private final JTextField field;
-
     public DateListener(JTextField field) {
-        this.field = field;
+        super(field);
     }
 
     @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    private LocalDate parseDate(String input) {
+    protected LocalDate parseValue(String input) {
         System.out.println("Try formatting : " + input);
         for (DateTimeFormatter formatter : FORMATS) {
             try {
@@ -42,18 +36,4 @@ public abstract class DateListener implements KeyListener {
         return null;
     }
 
-    @Override
-    public void keyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        String input = field.getText();
-        LocalDate date = parseDate(input);
-        System.out.println(date);
-        onDateUpdate(date);
-    }
-
-    public abstract void  onDateUpdate(LocalDate newDate);
 }
