@@ -4,28 +4,34 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class MoneyPresenter implements
         MoneyContract.Presenter {
     private final MoneyContract.View view;
 
     private List<Cost> costs = new ArrayList<>();
+    private List<Cost> lastResult = new ArrayList<>();
+    private double fromPrice = Double.MIN_VALUE;
+    private String word;
+    private double toPrice;
+    private LocalDate fromDate;
+    private LocalDate toDate;
 
     public MoneyPresenter(MoneyContract.View view) {
         this.view = view;
     }
 
     @Override
-    public void initData() {
+    public void prepareData() {
         File file = new File("zakupy.csv");
         try {
             FileReader reader = new FileReader(file);
             BufferedReader buffer = new BufferedReader(reader);
             boolean fistIgnored = false;
             String line = buffer.readLine();
-            line = buffer.readLine();
             while (line != null) {
                 if (!fistIgnored) {
                     fistIgnored = true;
@@ -35,12 +41,15 @@ public class MoneyPresenter implements
                 }
                 line = buffer.readLine();
             }
-            //todo czytamy linijka po linijce i tworzymy liste Cost
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void initData() {
         view.refreshList(costs);
     }
 
@@ -58,6 +67,61 @@ public class MoneyPresenter implements
 
     @Override
     public void onWordChange(String word) {
-        //todo
+        this.word = word;
+        refreshAndShow();
+    }
+
+    @Override
+    public void onPriceFromChange(double fromPrice) {
+        this.fromPrice = fromPrice;
+        refreshAndShow();
+    }
+
+    @Override
+    public void onPriceToChange(double toPrice) {
+        this.toPrice = toPrice;
+        refreshAndShow();
+    }
+
+    @Override
+    public void onFromDateChange(LocalDate fromDate) {
+        this.fromDate = fromDate;
+        refreshAndShow();
+    }
+
+    @Override
+    public void onToDateChange(LocalDate toDate) {
+        this.toDate = toDate;
+        refreshAndShow();
+    }
+
+    private void refreshAndShow() {
+        refreshResults();
+        view.refreshList(lastResult);
+    }
+
+    private void refreshResults() {
+        Stream<Cost> stream = costs.stream();
+        if (word != null) {
+            stream = stream.filter(cost -> cost.shopName.contains(word));
+        }
+        if (fromPrice > 0) {
+            stream = stream.filter(cost -> cost.price >= fromPrice);
+        }
+        if (toPrice > 0) {
+            stream = stream.filter(cost -> cost.price <= toPrice);
+        }
+        if (fromDate != null) {
+            stream = stream.filter(cost -> !cost.date.isBefore(fromDate));
+        }
+        if (toDate != null) {
+            stream = stream.filter(cost -> !cost.date.isAfter(toDate));
+        }
+        lastResult = stream.collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Cost> getLastResult() {
+        return lastResult;
     }
 }
