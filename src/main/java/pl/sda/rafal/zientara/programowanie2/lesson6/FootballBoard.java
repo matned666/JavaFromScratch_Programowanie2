@@ -150,4 +150,14 @@ public class FootballBoard {
             addLine(line);
         }
     }
+
+    public boolean hasAnyConnection(Point position) {
+        for (Line line : lines) {
+            if (line.start.equals(position) ||
+                    line.end.equals(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

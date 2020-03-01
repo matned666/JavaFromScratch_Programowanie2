@@ -22,11 +22,17 @@ public class FootballViewTest {
         view = footballView;
         presenter = new FootballPresenter(view, board);
         footballView.setBoard(board);
+        footballView.setPresenter(presenter);
         board.initSides();
+        presenter.init();
     }
 
     @Test
     public void yolo() {
+        presenter.moveTop();//player t
+        presenter.moveRight();//player b
+        presenter.moveBottomLeft();//player t
+        presenter.moveBottom();//player t
         System.out.println("run");
 
     }
