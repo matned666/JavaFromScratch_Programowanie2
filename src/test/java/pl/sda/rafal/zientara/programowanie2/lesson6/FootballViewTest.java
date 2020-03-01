@@ -1,23 +1,37 @@
 package pl.sda.rafal.zientara.programowanie2.lesson6;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import javax.swing.*;
 import java.util.Scanner;
 
 public class FootballViewTest {
 
+    private FootballContract.View view;
+    private FootballContract.Presenter presenter;
     private FootballView footballView = new FootballView();
-    private FootballBoard board = new FootballBoard(10,12);
+    private FootballBoard board =
+            new FootballBoard(10,12);
 
     @BeforeEach
     public void setup() {
+//        view = Mockito.mock(FootballContract.View.class);
+        view = footballView;
+        presenter = new FootballPresenter(view, board);
         footballView.setBoard(board);
         board.initSides();
     }
 
     @Test
+    public void yolo() {
+        System.out.println("run");
+
+    }
+
+    @AfterEach
     public void test() {
         showMeBoard();
         waitForUser();

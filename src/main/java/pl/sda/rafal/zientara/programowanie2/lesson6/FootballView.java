@@ -4,7 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-public class FootballView extends JComponent {
+public class FootballView extends JComponent
+        implements FootballContract.View {
     private FootballBoard board;
 
     @Override
