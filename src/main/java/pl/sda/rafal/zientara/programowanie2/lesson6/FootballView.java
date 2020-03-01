@@ -12,7 +12,7 @@ public class FootballView extends JTextField
         implements FootballContract.View {
     private FootballBoard board;
     private Point position;
-    private LineType player;
+    private LineType player = LineType.PLAYER_TOP;
     private FootballContract.Presenter presenter;
 
     public FootballView() {
