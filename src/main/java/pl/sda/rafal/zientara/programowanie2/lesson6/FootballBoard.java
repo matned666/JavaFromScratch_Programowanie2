@@ -47,8 +47,42 @@ public class FootballBoard {
     public void initSides() {
         initLeftSide();
         initRightSide();
+        initTopSide();
+        initBottomSide();
         initTopGoal();
         initBottomGoal();
+    }
+
+    private void initTopSide() {
+        int widthCenter = width / 2;
+        for (int i = 0; i < width; i++) {
+            int x1 = i;
+            int x2 = i + 1;
+            int y = 1;
+            if (x1 < widthCenter - 1 || x1 > widthCenter) {
+                Point start = new Point(x1, y);
+                Point end = new Point(x2, y);
+                Line line = new Line(start, end,
+                        LineType.SIDE);
+                addLine(line);
+            }
+        }
+    }
+
+    private void initBottomSide() {
+        int widthCenter = width / 2;
+        for (int i = 0; i < width; i++) {
+            int x1 = i;
+            int x2 = i + 1;
+            int y = height - 1;
+            if (x1 < widthCenter - 1 || x1 > widthCenter) {
+                Point start = new Point(x1, y);
+                Point end = new Point(x2, y);
+                Line line = new Line(start, end,
+                        LineType.SIDE);
+                addLine(line);
+            }
+        }
     }
 
     private void initTopGoal() {
