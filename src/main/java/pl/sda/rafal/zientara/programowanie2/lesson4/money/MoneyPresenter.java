@@ -1,8 +1,8 @@
 package pl.sda.rafal.zientara.programowanie2.lesson4.money;
 
-import java.io.*;
+import pl.sda.rafal.zientara.programowanie2.lesson4.money.model.DataCostsProvider;
+
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +12,7 @@ import java.util.stream.Stream;
 public class MoneyPresenter implements
         MoneyContract.Presenter {
     private final MoneyContract.View view;
+    private final DataCostsProvider dataCostsProvider;
 
     private List<Cost> costs = new ArrayList<>();
     private List<Cost> lastResult = new ArrayList<>();
@@ -21,49 +22,20 @@ public class MoneyPresenter implements
     private LocalDate fromDate;
     private LocalDate toDate;
 
-    public MoneyPresenter(MoneyContract.View view) {
+    public MoneyPresenter(MoneyContract.View view,
+                          DataCostsProvider dataCostsProvider) {
         this.view = view;
+        this.dataCostsProvider = dataCostsProvider;
     }
 
     @Override
     public void prepareData() {
-        File file = new File("zakupy.csv");
-        try {
-            FileReader reader = new FileReader(file);
-            BufferedReader buffer = new BufferedReader(reader);
-            boolean fistIgnored = false;
-            String line = buffer.readLine();
-            while (line != null) {
-                if (!fistIgnored) {
-                    fistIgnored = true;
-                } else {
-                    Cost cost = parseCost(line);
-                    costs.add(cost);
-                }
-                line = buffer.readLine();
-            }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        costs = dataCostsProvider.readCosts();
     }
 
     @Override
     public void initData() {
         refreshAndShow();
-    }
-
-    private Cost parseCost(String line) {
-        String[] split = line.split(";");
-        String shopName = split[0];
-        double price = Double.parseDouble(split[1]//"345.50"
-                .replace(",", ".")
-                .replace("\"", ""));
-        String input = split[2];//2020-01-02
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate date = LocalDate.parse(input, formatter);
-        return new Cost(shopName, price, date);
     }
 
     @Override

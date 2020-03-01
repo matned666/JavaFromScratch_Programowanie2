@@ -1,5 +1,7 @@
 package pl.sda.rafal.zientara.programowanie2.lesson4.money;
 
+import pl.sda.rafal.zientara.programowanie2.lesson4.money.model.DataCostsProvider;
+
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -18,7 +20,7 @@ public class WhereIsMyMoney implements MoneyContract.View {
     private JTextField costFrom;
     private JTextField costTo;
     private JList<Cost> results;
-    private MoneyContract.Presenter presenter = new MoneyPresenter(this);
+    private MoneyContract.Presenter presenter = new MoneyPresenter(this, new DataCostsProvider());
 
     public WhereIsMyMoney() {
         frame = new JFrame("WTF");

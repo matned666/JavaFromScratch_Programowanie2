@@ -3,6 +3,7 @@ package pl.sda.rafal.zientara.programowanie2.lesson4.money;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import pl.sda.rafal.zientara.programowanie2.lesson4.money.model.DataCostsProvider;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -21,7 +22,7 @@ class MoneyPresenterTest {
     @BeforeEach
     public void setup() {
         view = Mockito.mock(MoneyContract.View.class);
-        presenter = new MoneyPresenter(view);
+        presenter = new MoneyPresenter(view, new DataCostsProvider());
         presenter.prepareData();
     }
 

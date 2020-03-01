@@ -1,0 +1,30 @@
+[
+  {
+    "dupa": "PizzaTestDrive",
+    "methods": {
+      "main": {
+        "modifiers": [
+          "public"
+        ],
+        "parameters": [
+          "String[]"
+        ],
+        "returnType": "void"
+      }
+    }
+  },
+  {
+    "dupa": "PizzaTestDrive2",
+    "methods": {
+      "main": {
+        "modifiers": [
+          "public"
+        ],
+        "parameters": [
+          "String[]"
+        ],
+        "returnType": "void"
+      }
+    }
+  }
+]
