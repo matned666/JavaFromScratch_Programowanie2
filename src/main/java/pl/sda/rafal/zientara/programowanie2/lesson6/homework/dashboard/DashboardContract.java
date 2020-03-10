@@ -11,6 +11,7 @@ public class DashboardContract {
     }
 
     public interface Presenter {
+        void getCash(int value);
         //todo interackja miêdzy o¿yszkodnikiem a presenterem
         //todo zadbaj o testy!
     }

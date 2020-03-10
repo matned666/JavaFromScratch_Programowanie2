@@ -2,6 +2,7 @@ package pl.sda.rafal.zientara.programowanie2.lesson6.homework.dashboard;
 
 import pl.sda.rafal.zientara.programowanie2.lesson6.homework.BaseSwingScreen;
 import pl.sda.rafal.zientara.programowanie2.lesson6.homework.model.Cash;
+import pl.sda.rafal.zientara.programowanie2.lesson6.homework.model.RandomMachineStorage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,7 +16,7 @@ public class DashboardScreen extends BaseSwingScreen {
     private final JButton confirm;
 
     //todo zamiast null przekaz this - co powinna implementowac ta klasa?
-    private final DashboardContract.Presenter presenter = new DashboardPresenter(null);
+    private final DashboardContract.Presenter presenter = new DashboardPresenter(null, new RandomMachineStorage());
     private final ScreenListener listener;
 
     public DashboardScreen(ScreenListener listener) {
