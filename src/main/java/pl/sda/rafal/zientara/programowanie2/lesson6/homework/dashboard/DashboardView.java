@@ -16,26 +16,26 @@ public class DashboardView implements DashboardContract.View {
 
     @Override
     public void onWithdrawalConfirm(List<Cash> money) {
-        dashboardScreen.onWithdrawalConfirm(dashboardScreen.getNotesToWithdraw());
+        dashboardScreen.onWithdrawalConfirm(money);
     }
 
     @Override
-    public void onPossibleLowestWithdraw(String value) {
+    public void onPossibleLowestWithdraw() {
         dashboardScreen.getMessage().setText("Still too small");
     }
 
     @Override
-    public void notDivisibleByNotesError(int value) {
+    public void notDivisibleByNotesError() {
         dashboardScreen.getMessage().setText("Not divisible by available notes, try in Afghanistan.");
     }
 
     @Override
-    public void notEnoughNotesError(int value) {
+    public void notEnoughNotesError() {
         dashboardScreen.getMessage().setText("Sorry, but there are no available notes, Try in another cash machine");
     }
 
     @Override
-    public void notNumericError(String value) {
+    public void notNumericError() {
         dashboardScreen.getMessage().setText("Not numeric");
         disableConfirmButton();
 

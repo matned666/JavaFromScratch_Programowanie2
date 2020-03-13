@@ -2,11 +2,13 @@ package pl.sda.rafal.zientara.programowanie2.lesson6.homework.pin;
 
 import pl.sda.rafal.zientara.programowanie2.lesson6.homework.Check;
 
+import java.util.List;
+
 
 public class PinPresenter implements PinContract.Presenter {
     private PinContract.View view;
     private PinScreen pinScreen;
-
+List ddo;
     private static final int PIN_LENGTH = 4;
     private static final String ACTUAL_PIN = "1234";
 

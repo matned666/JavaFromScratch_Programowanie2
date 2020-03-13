@@ -9,11 +9,11 @@ public class DashboardContract {
     public interface View {
         void onWithdrawalConfirm(List<Cash> money);
 
-        void onPossibleLowestWithdraw(String value);
+        void onPossibleLowestWithdraw();
 
-        void notDivisibleByNotesError(int value);
-        void notEnoughNotesError(int value);
-        void notNumericError(String value);
+        void notDivisibleByNotesError();
+        void notEnoughNotesError();
+        void notNumericError();
         void hideError();
 
         void enableConfirmButton();

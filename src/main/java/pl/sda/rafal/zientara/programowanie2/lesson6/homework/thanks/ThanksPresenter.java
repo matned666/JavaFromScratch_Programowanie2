@@ -22,4 +22,16 @@ public class ThanksPresenter implements ThanksContract.Presenter {
     public void okClicked() {
         view.confirmMessage();
     }
+
+    private String listOfCash(List<Cash> withdrawal){
+        StringBuilder list = new StringBuilder("List of withdrawn notes: ");
+
+        if(withdrawal.size()>0) {
+            for (int i = 0; i < withdrawal.size() - 1; i++) {
+                list.append("[").append(withdrawal.get(i)).append("$]");
+                if(i < withdrawal.size()-1) list.append(",");
+            }
+        }
+        return String.valueOf(list);
+    }
 }

@@ -31,27 +31,27 @@ public class DashboardPresenter implements DashboardContract.Presenter {
                 view.onWithdrawalConfirm(notesToWithdraw);
 
             } else if (isPossibleWithdraw(amount) == WithdrawPossibility.IMPOSSIBLE) {
-                view.notDivisibleByNotesError(amount);
+                view.notDivisibleByNotesError();
             } else {
-                view.notEnoughNotesError(amount);
+                view.notEnoughNotesError();
             }
-        }else view.notNumericError(value);
+        }else view.notNumericError();
     }
 
     @Override
     public void onTyping(String value) {
         if(!Check.isNumeric(value)){
-            view.notNumericError(value);
+            view.notNumericError();
         }else{
             view.hideError();
             int amount = Integer.parseInt(value);
-            if (amount < getLowestPossibleValue(amount)) {
-                view.onPossibleLowestWithdraw(value);
+            if (amount < getLowestPossibleValue()) {
+                view.onPossibleLowestWithdraw();
             }
         }
     }
 
-    private int getLowestPossibleValue(int amount) {
+    private int getLowestPossibleValue() {
         return Arrays.stream(Cash.values()).mapToInt(Cash::getWorth).min().orElseThrow(NoSuchElementException::new);
     }
 
