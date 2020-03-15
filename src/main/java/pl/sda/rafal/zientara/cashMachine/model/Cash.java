@@ -7,7 +7,6 @@ public enum Cash {
     BANK_NOTE_100(100),
     BANK_NOTE_200(200),
     BANK_NOTE_500(500);
-
     private final int worth;
 
     Cash(int worth) {

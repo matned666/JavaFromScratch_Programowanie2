@@ -1,5 +1,6 @@
 package pl.sda.rafal.zientara.cashMachine;
 
+import pl.sda.rafal.zientara.cashMachine.changePin.ChangePinScreen;
 import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 import pl.sda.rafal.zientara.cashMachine.mainMenu.MenuScreen;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
@@ -14,12 +15,14 @@ public class ScreensManager implements
         WrongPinScreen.ScreenListener,
         DashboardScreen.ScreenListener,
         ThanksScreen.ScreenListener,
-        MenuScreen.ScreenListener {
+        MenuScreen.ScreenListener,
+        ChangePinScreen.ScreenListener {
     private PinScreen pinScreen;
     private WrongPinScreen wrongPinScreen;
     private DashboardScreen dashboardScreen;
     private ThanksScreen thanksScreen;
     private MenuScreen menuScreen;
+    private ChangePinScreen changePinScreen;
 
     public void start() {
         pinScreen = new PinScreen(this);
@@ -89,11 +92,18 @@ public class ScreensManager implements
 
     @Override
     public void onChangePin() {
-
+        menuScreen.hide();
+        changePinScreen = new ChangePinScreen(this);
     }
 
     @Override
     public void onInfo() {
 
+    }
+
+    @Override
+    public void onBackButtonPress() {
+        changePinScreen.hide();
+        showMenu();
     }
 }
