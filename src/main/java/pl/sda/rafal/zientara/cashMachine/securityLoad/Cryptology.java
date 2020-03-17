@@ -16,34 +16,31 @@ public class Cryptology {
     private static final int KEY_LENGTH = 24;
     private static final String UNICODE_FORMAT = "UTF8";
     private static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
+
     private String myEncryptionScheme;
     private Cipher cipher;
     private SecretKey key;
     private String pin;
-    private String bankCode;
     private String cardNumber;
 
     private Cryptology(Builder builder) {
         myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
-        this.bankCode = builder.bankCode;
         this.cardNumber = builder.cardNumber;
         this.pin = builder.pin;
-        key1 = bankCode + cardNumber;
-        if(pin != null) {
-            StringBuilder pinReversed = new StringBuilder();
-            for (int i = 3; i >= 0; i--) {
-                pinReversed.append(pin.charAt(i));
-            }
-            System.out.println(pinReversed);
-            key2 = pin + pinReversed + pin + pinReversed  + pin + pinReversed;
+        key1 = key2Generator(false);
+        key2 = key2Generator(true);
         }
+
+    public String encrypt(String unencryptedText) throws Exception {
+        setEncryptionKey(key2);
+        String encryptLevel_1_Str = encryptInner(unencryptedText);
+        return encryptLevel_1_Str;
     }
 
     public String encrypt(String unencryptedText, String cardData) throws Exception {
-        setEncryptionKey(key2);
-        String encryptLevel_1_Str = encryptInner(unencryptedText);
+        // 2 levels (level 1 for card wrong pin counter)
         setEncryptionKey(key1);
-        String encryptLevel_2_Str = cardData + encryptLevel_1_Str;
+        String encryptLevel_2_Str = cardData + encrypt(unencryptedText);
         return encryptInner(encryptLevel_2_Str);
     }
 
@@ -60,18 +57,6 @@ public class Cryptology {
     public String encryptToBeNeverDecrypted(String unencryptedText) throws Exception {
         setEncryptionKey(generatedRandomKey());
         return encryptInner(unencryptedText);
-    }
-
-    private String generatedRandomKey() {
-        return RandomStringUtils.random(KEY_LENGTH, true, true);
-    }
-
-    private void setEncryptionKey(String secretKey) throws Exception {
-        byte[] arrayBytes = secretKey.getBytes(UNICODE_FORMAT);
-        KeySpec ks = new DESedeKeySpec(arrayBytes);
-        SecretKeyFactory skf = SecretKeyFactory.getInstance(myEncryptionScheme);
-        cipher = Cipher.getInstance(myEncryptionScheme);
-        key = skf.generateSecret(ks);
     }
 
     private String encryptInner(String unencryptedString) {
@@ -101,15 +86,49 @@ public class Cryptology {
         return decryptedText;
     }
 
+    private void setEncryptionKey(String secretKey) throws Exception {
+        byte[] arrayBytes = secretKey.getBytes(UNICODE_FORMAT);
+        KeySpec ks = new DESedeKeySpec(arrayBytes);
+        SecretKeyFactory skf = SecretKeyFactory.getInstance(myEncryptionScheme);
+        cipher = Cipher.getInstance(myEncryptionScheme);
+        key = skf.generateSecret(ks);
+    }
+
+    private String key2Generator(boolean keyTypeFlag_Key1False_Key2True) {
+        StringBuilder keyBuilder = new StringBuilder();
+        if(pin != null && keyTypeFlag_Key1False_Key2True) {
+            StringBuilder pinBuilder = new StringBuilder(pin);
+            for (int i = pin.length()-1; i >= 0; i--) {
+                pinBuilder.append(pin.charAt(i));
+            }
+            int counter = 0;
+            for (int i = 1 ; i <= KEY_LENGTH; i++){
+                keyBuilder.append(pinBuilder.charAt(counter));
+                counter++;
+                if(counter >= pinBuilder.length()) counter = 0;
+            }
+        } else {
+            int counter = 0;
+            for (int i = 1 ; i <= KEY_LENGTH; i++){
+                keyBuilder.append(cardNumber.charAt(counter));
+                counter++;
+                if(counter >= cardNumber.length()) counter = 0;
+            }
+        }
+        return String.valueOf(keyBuilder);
+    }
+
+    private String generatedRandomKey() {
+        return RandomStringUtils.random(KEY_LENGTH, true, true);
+    }
+
 
     public static class Builder{
 
         private String pin;
-        private String bankCode;
         private String cardNumber;
 
-        public Builder(String bankCode, String cardNumber) {
-            this.bankCode = bankCode;
+        public Builder(String cardNumber) {
             this.cardNumber = cardNumber;
         }
 
@@ -124,54 +143,4 @@ public class Cryptology {
     }
 }
 
-//class SecurityMainTest{
-//    public static void main(String[] args) throws Exception {
-//
-//        final String PIN = "1234";
-//        final String BANK_CODE = "Pk08pS4$";
-//        final String CARD_NUMBER = "4234345623454567";
-//
-//        final String CARD_DATA = PIN+";"+BANK_CODE+";"+CARD_NUMBER+";";
-//
-//        final String TEXT_TO_ENCRYPT ="Manufacture-MRN sp. z o.o.;Skladowa;4;49-305;Brzeg;7471911153;";
-//        String encryptedTextLVL1 = null;
-//        String[] decryptedArray;
-//        StringBuilder decryptedTextLVL1 = new StringBuilder();
-//        String decryptedTextLVL2 = "";
-//
-//        System.out.println("Input your pin: ");
-//        Scanner input = new Scanner(System.in);
-//        String givenPin = input.nextLine();
-//
-//        if(givenPin.equals(PIN)){
-//            EncryptDecrypt code = new EncryptDecrypt.Builder(BANK_CODE,CARD_NUMBER).pin(givenPin).build();
-//            encryptedTextLVL1 = code.encrypt(TEXT_TO_ENCRYPT,CARD_DATA);
-//            decryptedArray = code.decryptLevel1(encryptedTextLVL1).split(";");
-//            for (int i = 0; i < decryptedArray.length - 1; i++) {
-//                decryptedTextLVL1.append(decryptedArray[i]).append(";");
-//            }
-//            decryptedTextLVL2 = code.decryptLevel2(decryptedArray[decryptedArray.length-1]);
-//
-////            decryptedTextLVL1 = code.decryptLevel1(encryptedTextLVL1);
-////            decryptedTextLVL2 = code.decryptLevel2(decryptedTextLVL1.replace(CARD_DATA, ""));
-//
-//            System.out.println("Card data: " + CARD_DATA);
-//            System.out.println("Text to encrypt: " + TEXT_TO_ENCRYPT);
-//            System.out.println("Encrypted data: " + encryptedTextLVL1);
-////            assert decryptedTextLVL1 != null;
-//            System.out.println("Decrypted card data: " + decryptedTextLVL1);
-////            System.out.println("Decrypted text 1: " + decryptedTextLVL1);
-//            System.out.println("Decrypted text 2: " + decryptedTextLVL2);
-//
-//        }else {
-//
-//            EncryptDecrypt code = new EncryptDecrypt.Builder(BANK_CODE,CARD_NUMBER).build();
-//            String penaltyEncription = code.encryptToBeNeverDecrypted(CARD_DATA)+code.encryptToBeNeverDecrypted(TEXT_TO_ENCRYPT) ;
-//            System.out.println("Wrong pin");
-//            System.out.println("Your data has been encrypted. Bo to bank");
-//            System.out.println("Encrypted data: " + penaltyEncription);
-//        }
-//
-//
-//    }
-//}
+
