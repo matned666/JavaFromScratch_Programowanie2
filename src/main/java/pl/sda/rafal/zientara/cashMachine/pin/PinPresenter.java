@@ -8,9 +8,8 @@ import java.util.List;
 public class PinPresenter implements PinContract.Presenter {
     private PinContract.View view;
     private PinScreen pinScreen;
-List ddo;
-    private static final int PIN_LENGTH = 4;
-    private static final String ACTUAL_PIN = "1234";
+    protected static final int PIN_LENGTH = 4;
+    protected static final String ACTUAL_PIN = "1234";
 
     PinPresenter(PinContract.View view) {
         this.view = view;

@@ -1,4 +1,4 @@
-package pl.sda.rafal.zientara.cashMachine.changePin;
+package pl.sda.rafal.zientara.cashMachine.pin.changePin;
 
 public interface ChangePinScreenInterface {
 

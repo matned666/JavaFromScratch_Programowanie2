@@ -1,6 +1,6 @@
 package pl.sda.rafal.zientara.cashMachine;
 
-import pl.sda.rafal.zientara.cashMachine.changePin.ChangePinScreen;
+import pl.sda.rafal.zientara.cashMachine.pin.changePin.ChangePinScreen;
 import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 import pl.sda.rafal.zientara.cashMachine.mainMenu.MenuScreen;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
