@@ -17,16 +17,18 @@ public class Cryptology {
     private static final String UNICODE_FORMAT = "UTF8";
     private static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
-    private String myEncryptionScheme;
     private Cipher cipher;
     private SecretKey key;
     private String pin;
     private String cardNumber;
 
-    private Cryptology(Builder builder) {
-        myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
-        this.cardNumber = builder.cardNumber;
-        this.pin = builder.pin;
+    public Cryptology(String cardNumber) {
+        this.cardNumber = cardNumber;
+    }
+
+    public Cryptology(String cardNumber, String pin) {
+        this.cardNumber = cardNumber;
+        this.pin = pin;
         key1 = key2Generator(false);
         key2 = key2Generator(true);
         }
@@ -39,8 +41,9 @@ public class Cryptology {
 
     public String encrypt(String unencryptedText, String cardData) throws Exception {
         // 2 levels (level 1 for card wrong pin counter)
+        String encryptedText1 = encrypt(unencryptedText);
         setEncryptionKey(key1);
-        String encryptLevel_2_Str = cardData + encrypt(unencryptedText);
+        String encryptLevel_2_Str = cardData + encryptedText1;
         return encryptInner(encryptLevel_2_Str);
     }
 
@@ -89,6 +92,7 @@ public class Cryptology {
     private void setEncryptionKey(String secretKey) throws Exception {
         byte[] arrayBytes = secretKey.getBytes(UNICODE_FORMAT);
         KeySpec ks = new DESedeKeySpec(arrayBytes);
+        String myEncryptionScheme = DESEDE_ENCRYPTION_SCHEME;
         SecretKeyFactory skf = SecretKeyFactory.getInstance(myEncryptionScheme);
         cipher = Cipher.getInstance(myEncryptionScheme);
         key = skf.generateSecret(ks);
@@ -123,24 +127,6 @@ public class Cryptology {
     }
 
 
-    public static class Builder{
-
-        private String pin;
-        private String cardNumber;
-
-        public Builder(String cardNumber) {
-            this.cardNumber = cardNumber;
-        }
-
-        public Builder pin(String pin){
-            this.pin = pin;
-            return this;
-        }
-
-        public Cryptology build() throws Exception {
-            return new Cryptology(this);
-        }
-    }
 }
 
 
