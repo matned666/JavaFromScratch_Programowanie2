@@ -8,6 +8,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESedeKeySpec;
 import java.security.spec.KeySpec;
+import java.util.Scanner;
 
 public class EncryptDecrypt {
 
@@ -30,7 +31,7 @@ public class EncryptDecrypt {
         this.cardNumber = builder.cardNumber;
         this.pin = builder.pin;
         key1 = bankCode + cardNumber;
-        key2 = cardNumber + pin + pin.charAt(3) + pin.charAt(2) + pin.charAt(1) + pin.charAt(0);
+        if(pin != null) key2 = cardNumber + pin + pin.charAt(3) + pin.charAt(2) + pin.charAt(1) + pin.charAt(0);
     }
 
 
@@ -120,6 +121,58 @@ public class EncryptDecrypt {
         public EncryptDecrypt build() throws Exception {
             return new EncryptDecrypt(this);
         }
+
+    }
+}
+
+class SecurityMain{
+    public static void main(String[] args) throws Exception {
+
+        final String PIN = "1234";
+        final String BANK_CODE = "Pk08pS4$";
+        final String CARD_NUMBER = "4234345623454567";
+
+        final String CARD_DATA = PIN+";"+BANK_CODE+";"+CARD_NUMBER+";";
+
+        final String TEXT_TO_ENCRYPT ="Manufacture-MRN sp. z o.o.;Skladowa;4;49-305;Brzeg;7471911153;";
+        String encryptedTextLVL1 = null;
+        String[] decryptedArray;
+        StringBuilder decryptedTextLVL1 = new StringBuilder();
+        String decryptedTextLVL2 = "";
+
+        System.out.println("Input your pin: ");
+        Scanner input = new Scanner(System.in);
+        String givenPin = input.nextLine();
+
+        if(givenPin.equals(PIN)){
+            EncryptDecrypt code = new EncryptDecrypt.Builder(BANK_CODE,CARD_NUMBER).pin(givenPin).build();
+            encryptedTextLVL1 = code.encrypt(TEXT_TO_ENCRYPT,CARD_DATA);
+            decryptedArray = code.decryptLevel1(encryptedTextLVL1).split(";");
+            for (int i = 0; i < decryptedArray.length - 1; i++) {
+                decryptedTextLVL1.append(decryptedArray[i]).append(";");
+            }
+            decryptedTextLVL2 = code.decryptLevel2(decryptedArray[decryptedArray.length-1]);
+
+//            decryptedTextLVL1 = code.decryptLevel1(encryptedTextLVL1);
+//            decryptedTextLVL2 = code.decryptLevel2(decryptedTextLVL1.replace(CARD_DATA, ""));
+
+            System.out.println("Card data: " + CARD_DATA);
+            System.out.println("Text to encrypt: " + TEXT_TO_ENCRYPT);
+            System.out.println("Encrypted data: " + encryptedTextLVL1);
+//            assert decryptedTextLVL1 != null;
+            System.out.println("Decrypted card data: " + decryptedTextLVL1);
+//            System.out.println("Decrypted text 1: " + decryptedTextLVL1);
+            System.out.println("Decrypted text 2: " + decryptedTextLVL2);
+
+        }else {
+
+            EncryptDecrypt code = new EncryptDecrypt.Builder(BANK_CODE,CARD_NUMBER).build();
+            String penaltyEncription = code.encryptToBeNeverDecrypted(CARD_DATA)+code.encryptToBeNeverDecrypted(TEXT_TO_ENCRYPT) ;
+            System.out.println("Wrong pin");
+            System.out.println("Your data has been encrypted. Bo to bank");
+            System.out.println("Encrypted data: " + penaltyEncription);
+        }
+
 
     }
 }
