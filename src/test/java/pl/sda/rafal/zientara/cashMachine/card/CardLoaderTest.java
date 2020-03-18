@@ -4,12 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
 
-import java.io.IOException;
-
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
-import static org.mockito.Mockito.when;
 
 class CardLoaderTest {
 
@@ -21,13 +16,11 @@ class CardLoaderTest {
 
 
 
-    //TODO tests for Card Loader
     //Pin is '1234'
     @BeforeEach
     void setup() throws Exception {
         fileOperations = new FileOperations(PATH);
         fileOperations.writeDataToFile("e6tufv0yfmfHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==");
-//        fileOperations.writeDataToFile("a8O3t9kfEwb8d6iwwgpU+dE5CjqZGJnSVBhGVi07dZRqVlcSA6Q5LlN/Kp/bBpEUS77qJO6h22WkUstG33TCJw==");
         loader = new CardLoader(TEST_CARD_NUMBER);
     }
 
@@ -85,7 +78,6 @@ class CardLoaderTest {
        loader.ENTER_PIN("1234");
        Card card = loader.getCard();
 
-
        assertEquals(card.getPinCondition(),PinCondition.FIRST_ATTEMPT);
        assertEquals(card.getOwnerName(),"Mateusz");
        assertEquals(card.getOwnerSurname(),"Niedbal");
@@ -97,8 +89,6 @@ class CardLoaderTest {
         fileOperations.writeDataToFile("w2uakdxpFSXHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==");
         loader = new CardLoader(TEST_CARD_NUMBER);
         loader.ENTER_PIN("2356");
-
         assertThrows(RuntimeException.class, () -> loader = new CardLoader(TEST_CARD_NUMBER));
-
     }
 }
