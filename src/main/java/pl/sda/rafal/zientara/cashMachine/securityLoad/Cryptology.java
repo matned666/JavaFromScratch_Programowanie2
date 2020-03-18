@@ -23,7 +23,11 @@ public class Cryptology {
     private String cardNumber;
 
     public Cryptology(String cardNumber) {
+
         this.cardNumber = cardNumber;
+        key1 = key2Generator(false);
+        key2 = key2Generator(true);
+
     }
 
     public Cryptology(String cardNumber, String pin) {

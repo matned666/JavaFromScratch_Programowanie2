@@ -5,11 +5,9 @@ import java.util.Scanner;
 
 public class FileOperations {
 
-    private String path;
     private File file;
 
     public FileOperations(String path) {
-        this.path = path;
         file = new File(path);
     }
 

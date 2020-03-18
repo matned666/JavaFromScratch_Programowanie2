@@ -7,6 +7,8 @@ public class CardLoader {
 
     private String cardNumber;
 
+    private final static String SEPARATOR = ";;;;";
+    private final String PATH;
     private FileOperations fileOperations;
     private Cryptology crypt;
     private String loadedData;
@@ -14,10 +16,12 @@ public class CardLoader {
     private String encryptedSecondStageData;
     private String decryptedData_2_SecondStep;
     private Card card;
+    private PinCondition pinCondition;
 
 
     public CardLoader(String cardNumber) throws Exception {
         this.cardNumber = cardNumber;
+        PATH = "src\\main\\resources\\"+ cardNumber +".card";
         initialize();
     }
 
@@ -28,24 +32,30 @@ public class CardLoader {
         crypt = new Cryptology(cardNumber,pin);
         try {
             decryption_2_SecondStage();
+            String temp = crypt.encrypt(encryptedSecondStageData, (PinCondition.FIRST_ATTEMPT+SEPARATOR));
+            fileOperations.writeDataToFile(temp);
+
         } catch (Exception e) {
+            crypt = new Cryptology(cardNumber);
             if(card.getPinCondition() == PinCondition.THIRD_ATTEMPT) fileOperations.writeDataToFile(crypt.encryptToBeNeverDecrypted(loadedData));
             else {
+
                 card.setPinCondition(PinCondition.nextTo(card.getPinCondition()));
-                fileOperations.writeDataToFile(crypt.encrypt(encryptedSecondStageData,getPinCondition()));
+                String temp = crypt.encrypt(getCardPinCondition()+SEPARATOR+encryptedSecondStageData);
+                fileOperations.writeDataToFile(temp);
             }
         }
     }
 
     private void initialize() throws Exception {
-        fileOperations = new FileOperations("src\\main\\resources\\"+ cardNumber +".card");
+        fileOperations = new FileOperations(PATH);
         loadedData = fileOperations.readDataFromFile();
         crypt = new Cryptology(cardNumber);
         decryption_1_FirstStage();
         splitThatShit();
     }
 
-    private String getPinCondition() {
+    private String getCardPinCondition() {
         return String.valueOf(card.getPinCondition());
     }
 
@@ -54,26 +64,29 @@ public class CardLoader {
     }
 
     private void splitThatShit() {
-        String[] tempArr = decryptedData_1_FirstStep.split(";separator;");
-        PinCondition pinCondition = setPinCondition(tempArr[0]);
+        String[] tempArr = decryptedData_1_FirstStep.split(SEPARATOR);
+        String temp = tempArr[0];
+        pinCondition = setPinCondition(temp);
+
         encryptedSecondStageData = tempArr[1];
         card = new Card.Builder(cardNumber).pinCondition(pinCondition).build();
     }
 
     private void decryption_2_SecondStage() throws Exception {
+
         decryptedData_2_SecondStep = crypt.decryptLevel2(encryptedSecondStageData);
         createCard();
     }
 
     private void createCard() throws Exception {
-        String[] tempArr = decryptedData_2_SecondStep.split(";separator;");
+        String[] tempArr = decryptedData_2_SecondStep.split(SEPARATOR);
         card = new Card.Builder(cardNumber)
                 .pinCondition(PinCondition.FIRST_ATTEMPT)
                 .ownerName(tempArr[0])
                 .ownerSurname(tempArr[1])
                 .balance(tempArr[2])
                 .build();
-        fileOperations.writeDataToFile(crypt.encrypt(decryptedData_2_SecondStep, getPinCondition()));
+        fileOperations.writeDataToFile(crypt.encrypt(decryptedData_2_SecondStep, getCardPinCondition()));
     }
 
     private PinCondition setPinCondition(String pinCondition) {
@@ -87,5 +100,9 @@ public class CardLoader {
 
     public Card getCard() {
         return card;
+    }
+
+    public PinCondition getPinCondition() {
+        return pinCondition;
     }
 }

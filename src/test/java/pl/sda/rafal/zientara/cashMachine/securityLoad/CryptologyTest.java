@@ -35,7 +35,7 @@ class CryptologyTest {
     @Test
     void encryptingTest1_NoResultTest_OnCorrectPin() throws Exception {
         final String PIN = "1234";
-        final String CARD_NUMBER = "testcard";
+        final String CARD_NUMBER = "4589619849657531";
 
         final String CARD_DATA = "FIRST_ATTEMPT;separator;";
 
@@ -80,6 +80,29 @@ class CryptologyTest {
             System.out.println("Your data has been encrypted. Bo to bank");
             System.out.println("Encrypted data: " + penaltyEncription);
 
+
+    }
+
+    @Test
+    void testing() throws Exception {
+        Cryptology code = new Cryptology("4589619849657531");
+        System.out.println(code.decryptLevel2("e6tufv0yfmc57sx6W67K2a55OcAuo2evFOr4gy0M7mUqFxgGuYr7L+4wcTn5z2mExLoXhZnwcgovmoVQkfr+C/LDugCMfFQFM/72orIlTyrUHtx1/Dqnx0dHYToPyUKo"));
+    }
+
+@Test
+    void testing2() throws Exception {
+    final String PIN = "1234";
+    final String CARD_NUMBER = "4589619849657531";
+
+    final String CARD_DATA = "FIRST_ATTEMPT;;;;";
+
+    final String TEXT_TO_ENCRYPT ="Mateusz;;;;Niedbal;;;;2300";
+        Cryptology code = new Cryptology(CARD_NUMBER,PIN);
+       String encryptedSht = "e6tufv0yfmfHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==";
+
+    System.out.println(code.decryptLevel1(encryptedSht));
+
+        assertEquals(code.encrypt(TEXT_TO_ENCRYPT,CARD_DATA), encryptedSht );
 
     }
 
