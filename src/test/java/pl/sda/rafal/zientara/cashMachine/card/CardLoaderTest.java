@@ -47,8 +47,6 @@ class CardLoaderTest {
         loader = new CardLoader(TEST_CARD_NUMBER);
 
         assertEquals(loader.getPinCondition(),PinCondition.THIRD_ATTEMPT);
-
-
     }
 
     @Test
@@ -59,12 +57,10 @@ class CardLoaderTest {
         loader.ENTER_PIN("1234");
         Card card = loader.getCard();
 
-
         assertEquals(card.getPinCondition(),PinCondition.FIRST_ATTEMPT);
         assertEquals(card.getOwnerName(),"Mateusz");
         assertEquals(card.getOwnerSurname(),"Niedbal");
         assertEquals(card.getBalance(),"2300");
-
     }
 
    @Test
