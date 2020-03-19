@@ -1,5 +1,6 @@
 package pl.sda.rafal.zientara.cashMachine.card;
 
+import pl.sda.rafal.zientara.cashMachine.StaticData;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.Cryptology;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
 
@@ -7,7 +8,7 @@ public class CardLoader {
 
     private String cardNumber;
 
-    private final static String SEPARATOR = ";;;;";
+    private final static String SEPARATOR = StaticData.SEPARATOR;
     private final String PATH;
     private FileOperations fileOperations;
     private Cryptology crypt;
@@ -17,34 +18,42 @@ public class CardLoader {
     private String decryptedData_2_SecondStep;
     private Card card;
     private PinCondition pinCondition;
+    private boolean isPassed;
 
 
     public CardLoader(String cardNumber) throws Exception {
         this.cardNumber = cardNumber;
-        PATH = "src\\main\\resources\\"+ cardNumber +".card";
+        PATH = StaticData.PATH_TO_RESOURCES + cardNumber + StaticData.CARD_FILE_EXTENSION;
         initialize();
     }
 
     /*
-           <<<< BE CAREFUL THIS OPTION CAN CHANGE FILE PERMANENTLY IF THIRD ATTEMPT OF PIN ENTERING IS FAILED >>>>
+           <<<< BE CAREFUL THIS OPTION CAN CHANGE FILE PERMANENTLY >>>>
+           <<<<  IF THIRD ATTEMPT OF PIN ENTERING IS FAILED IT IS ENCODED PERMANENTLY >>>>
         */
     public void ENTER_PIN(String pin) throws Exception {
-        crypt = new Cryptology(cardNumber,pin);
+        crypt = new Cryptology(cardNumber.trim(),pin.trim());
         try {
             decryption_2_SecondStage();
-            String temp = crypt.encrypt(encryptedSecondStageData, (PinCondition.FIRST_ATTEMPT+SEPARATOR));
-            fileOperations.writeDataToFile(temp);
+            String temp = crypt.encrypt(encryptedSecondStageData.trim(), ("FIRST_ATTEMPT"+SEPARATOR));
+            fileOperations.writeDataToFile(temp.trim());
+            isPassed(true);
 
         } catch (Exception e) {
-            crypt = new Cryptology(cardNumber);
-            if(card.getPinCondition() == PinCondition.THIRD_ATTEMPT) fileOperations.writeDataToFile(crypt.encryptToBeNeverDecrypted(loadedData));
+            isPassed(false);
+            crypt = new Cryptology(cardNumber.trim());
+            if(card.getPinCondition() == PinCondition.THIRD_ATTEMPT) fileOperations.writeDataToFile(crypt.encryptToBeNeverDecrypted(loadedData).trim());
             else {
 
                 card.setPinCondition(PinCondition.nextTo(card.getPinCondition()));
-                String temp = crypt.encrypt(getCardPinCondition()+SEPARATOR+encryptedSecondStageData);
+                String temp = crypt.encrypt(getCardPinCondition()+SEPARATOR+encryptedSecondStageData).trim();
                 fileOperations.writeDataToFile(temp);
             }
         }
+    }
+
+    private void isPassed(boolean b) {
+        isPassed = b;
     }
 
     private void initialize() throws Exception {
@@ -104,5 +113,9 @@ public class CardLoader {
 
     public PinCondition getPinCondition() {
         return pinCondition;
+    }
+
+    public boolean isPassed() {
+        return isPassed;
     }
 }

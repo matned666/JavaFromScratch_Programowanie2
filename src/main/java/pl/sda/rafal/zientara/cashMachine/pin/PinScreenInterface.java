@@ -13,6 +13,8 @@ public interface PinScreenInterface {
 
     JPasswordField getPasswordField();
 
+    String getCardNumber();
+
     public interface ScreenListener {
         //info
         void onCorrectPin();

@@ -45,6 +45,16 @@ public class Card {
         this.pin = pin;
     }
 
+    public String toString() {
+        return "Builder{" +
+                "cardNumber='" + cardNumber + '\'' +
+                ", pinCondition=" + pinCondition +
+                ", ownerName='" + ownerName + '\'' +
+                ", ownerSurname='" + ownerSurname + '\'' +
+                ", balance='" + balance + '\'' +
+                '}';
+    }
+
     public static class Builder {
 
         private String cardNumber;
@@ -56,6 +66,8 @@ public class Card {
         private String balance;
 
         private String pin;
+
+
 
         public Builder(String cardNumber) {
             this.cardNumber = cardNumber;
@@ -89,5 +101,7 @@ public class Card {
         public Card build(){
             return new Card(this);
         }
+
+
     }
 }

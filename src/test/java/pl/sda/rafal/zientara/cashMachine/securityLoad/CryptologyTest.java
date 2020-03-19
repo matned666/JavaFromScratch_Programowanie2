@@ -1,6 +1,8 @@
 package pl.sda.rafal.zientara.cashMachine.securityLoad;
 
 import org.junit.jupiter.api.Test;
+import pl.sda.rafal.zientara.cashMachine.StaticData;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class CryptologyTest {
@@ -37,9 +39,9 @@ class CryptologyTest {
         final String PIN = "1234";
         final String CARD_NUMBER = "4589619849657531";
 
-        final String CARD_DATA = "FIRST_ATTEMPT;separator;";
-
-        final String TEXT_TO_ENCRYPT ="Mateusz;separator;Niedbal;separator;2300";
+        final String CARD_DATA = "FIRST_ATTEMPT"+ StaticData.SEPARATOR;
+// e6tufv0yfmfHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==
+        final String TEXT_TO_ENCRYPT ="Mateusz"+ StaticData.SEPARATOR + "Niedbal"+ StaticData.SEPARATOR + "2300";
         String encryptedTextLVL1 = null;
         String[] decryptedArray;
         StringBuilder decryptedTextLVL1 = new StringBuilder();
@@ -86,7 +88,7 @@ class CryptologyTest {
     @Test
     void testing() throws Exception {
         Cryptology code = new Cryptology("4589619849657531");
-        System.out.println(code.decryptLevel2("e6tufv0yfmc57sx6W67K2a55OcAuo2evFOr4gy0M7mUqFxgGuYr7L+4wcTn5z2mExLoXhZnwcgovmoVQkfr+C/LDugCMfFQFM/72orIlTyrUHtx1/Dqnx0dHYToPyUKo"));
+
     }
 
 @Test

@@ -1,15 +1,16 @@
 package pl.sda.rafal.zientara.cashMachine.pin;
 
 import pl.sda.rafal.zientara.cashMachine.Check;
-
-import java.util.List;
+import pl.sda.rafal.zientara.cashMachine.StaticData;
+import pl.sda.rafal.zientara.cashMachine.card.Card;
+import pl.sda.rafal.zientara.cashMachine.card.CardLoader;
 
 
 public class PinPresenter implements PinContract.Presenter {
     private PinContract.View view;
     private PinScreen pinScreen;
-    protected static final int PIN_LENGTH = 4;
-    protected static final String ACTUAL_PIN = "1234";
+    private CardLoader cardloader;
+    private static final int PIN_LENGTH = StaticData.PIN_LENGTH;
 
     PinPresenter(PinContract.View view) {
         this.view = view;
@@ -39,14 +40,26 @@ public class PinPresenter implements PinContract.Presenter {
     }
 
     @Override
-    public void onPinConfirmed(String pin) {
+    public void onPinConfirmed(String pin) throws Exception {
 
-        if (pin.trim().equals(ACTUAL_PIN)) view.correctPin();
-        else view.wrongPin();
+            cardloader = new CardLoader(pinScreen.getCardNumber());
+            cardloader.ENTER_PIN(pin.trim());
+            getCard();
+
+            if(cardloader.isPassed()) {
+                view.correctPin();
+                System.out.println(cardloader.getCard().toString());
+            }
+            else view.wrongPin();
+
+
 
     }
 
-
+    @Override
+    public Card getCard() {
+        return cardloader.getCard();
+    }
 
 
 }

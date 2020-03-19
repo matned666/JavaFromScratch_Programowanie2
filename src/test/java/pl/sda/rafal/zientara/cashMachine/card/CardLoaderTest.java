@@ -13,7 +13,7 @@ class CardLoaderTest {
 
     private FileOperations fileOperations;
     private CardLoader loader;
-
+    private String CORRECT_PIN = "1234";
 
 
     //Pin is '1234'
@@ -26,7 +26,7 @@ class CardLoaderTest {
 
     @Test
     void correctPinEnteringLoadsCorrectData() throws Exception {
-        loader.ENTER_PIN("1234");
+        loader.ENTER_PIN(CORRECT_PIN);
 
         Card card = loader.getCard();
 
@@ -49,14 +49,16 @@ class CardLoaderTest {
         assertEquals(loader.getPinCondition(),PinCondition.THIRD_ATTEMPT);
 
 
+
     }
 
     @Test
     void onSecondAttemptCanStillLoadData() throws Exception {
         loader.ENTER_PIN("2356");
         loader = new CardLoader(TEST_CARD_NUMBER);
+        assertEquals(loader.getPinCondition(),PinCondition.SECOND_ATTEMPT);
 
-        loader.ENTER_PIN("1234");
+        loader.ENTER_PIN(CORRECT_PIN);
         Card card = loader.getCard();
 
 
@@ -75,7 +77,7 @@ class CardLoaderTest {
        loader = new CardLoader(TEST_CARD_NUMBER);
        assertEquals(loader.getPinCondition(),PinCondition.THIRD_ATTEMPT);
 
-       loader.ENTER_PIN("1234");
+       loader.ENTER_PIN(CORRECT_PIN);
        Card card = loader.getCard();
 
        assertEquals(card.getPinCondition(),PinCondition.FIRST_ATTEMPT);
@@ -89,6 +91,14 @@ class CardLoaderTest {
         fileOperations.writeDataToFile("w2uakdxpFSXHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==");
         loader = new CardLoader(TEST_CARD_NUMBER);
         loader.ENTER_PIN("2356");
-        assertThrows(RuntimeException.class, () -> loader = new CardLoader(TEST_CARD_NUMBER));
+        assertThrows(Exception.class, () -> loader = new CardLoader(TEST_CARD_NUMBER));
+    }
+
+    @Test
+    void test() throws Exception {
+        fileOperations.writeDataToFile("e6tufv0yfmfHy7LXyL18lqytREZIlzcnkaOrmQLy9LGUOmSuZM9ZxW2lR55ymfVkHHLT363ieQLYcmt2qAXxxQ6UhOSZSaAK3fLPq7OYfSOEF0gY20mx/Q==");
+        loader = new CardLoader("4589619849657531");
+        loader.ENTER_PIN(CORRECT_PIN);
+        System.out.println(loader.getCard().toString());
     }
 }

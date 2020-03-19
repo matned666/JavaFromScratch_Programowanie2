@@ -1,10 +1,11 @@
 package pl.sda.rafal.zientara.cashMachine;
 
-import pl.sda.rafal.zientara.cashMachine.pin.changePin.ChangePinScreen;
 import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 import pl.sda.rafal.zientara.cashMachine.mainMenu.MenuScreen;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
 import pl.sda.rafal.zientara.cashMachine.pin.PinScreen;
+import pl.sda.rafal.zientara.cashMachine.pin.changePin.ChangePinScreen;
+import pl.sda.rafal.zientara.cashMachine.startScreen.StartScreen;
 import pl.sda.rafal.zientara.cashMachine.thanks.ThanksScreen;
 import pl.sda.rafal.zientara.cashMachine.wrong.WrongPinScreen;
 
@@ -16,17 +17,22 @@ public class ScreensManager implements
         DashboardScreen.ScreenListener,
         ThanksScreen.ScreenListener,
         MenuScreen.ScreenListener,
-        ChangePinScreen.ScreenListener {
+        ChangePinScreen.ScreenListener,
+        StartScreen.ScreenListener {
+
     private PinScreen pinScreen;
+    private StartScreen startScreen;
     private WrongPinScreen wrongPinScreen;
     private DashboardScreen dashboardScreen;
     private ThanksScreen thanksScreen;
     private MenuScreen menuScreen;
     private ChangePinScreen changePinScreen;
 
+    private String cardNumber;
+
     public void start() {
-        pinScreen = new PinScreen(this);
-        pinScreen.show();
+        startScreen = new StartScreen(this);
+        startScreen.show();
     }
 
     @Override
@@ -66,7 +72,7 @@ public class ScreensManager implements
     @Override
     public void onWithdrawalConfirm() {
         thanksScreen.hide();
-        System.exit(0);
+        showMenu();
     }
 
     @Override
@@ -106,4 +112,16 @@ public class ScreensManager implements
         changePinScreen.hide();
         showMenu();
     }
+
+    @Override
+    public void onCorrectCardNum() {
+        this.cardNumber = startScreen.getCardNumber();
+        System.out.println(cardNumber);
+        startScreen.hide();
+        pinScreen = new PinScreen(this, this.cardNumber);
+        pinScreen.show();
+
+    }
+
+
 }
