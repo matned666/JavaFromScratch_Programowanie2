@@ -1,6 +1,7 @@
 package pl.sda.rafal.zientara.cashMachine.dashboard;
 
 import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
+import pl.sda.rafal.zientara.cashMachine.card.Card;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
 import pl.sda.rafal.zientara.cashMachine.model.RandomMachineStorage;
 
@@ -15,14 +16,15 @@ public class DashboardScreen extends BaseSwingScreen implements DashboardScreenI
     private final JTextField moneyAmount;
     private final JLabel message;
     private final JButton confirm;
+    private Card card;
 
     private final DashboardContract.View view = new DashboardView(this);
-    private final DashboardContract.Presenter presenter = new DashboardPresenter(view, new RandomMachineStorage());
+    private final DashboardContract.Presenter presenter;
     private final ScreenListener listener;
 
-    public DashboardScreen(ScreenListener listener) {
+    public DashboardScreen(ScreenListener listener, Card card) {
         this.listener = listener;
-
+        presenter = new DashboardPresenter(view, new RandomMachineStorage(),card);
         frame = new JFrame("Insert amount of cash");
         frame.setSize(600, 400);
         frame.setLayout(new GridLayout(0, 1));
@@ -51,7 +53,13 @@ public class DashboardScreen extends BaseSwingScreen implements DashboardScreenI
         frame.add(message);
 
         confirm = new JButton("Confirm");
-        confirm.addActionListener(e -> presenter.getCash(moneyAmount.getText()));
+        confirm.addActionListener(e -> {
+            try {
+                presenter.getCash(moneyAmount.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
         frame.add(confirm);
         confirm.setVisible(true);
     }
@@ -74,5 +82,15 @@ public class DashboardScreen extends BaseSwingScreen implements DashboardScreenI
     @Override
     public JButton getConfirm() {
         return confirm;
+    }
+
+    @Override
+    public Card getCard() {
+        return card;
+    }
+
+    @Override
+    public void setCard(Card card) {
+        this.card = card;
     }
 }

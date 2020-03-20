@@ -1,8 +1,12 @@
 package pl.sda.rafal.zientara.cashMachine.dashboard;
 
 import pl.sda.rafal.zientara.cashMachine.Check;
+import pl.sda.rafal.zientara.cashMachine.StaticData;
+import pl.sda.rafal.zientara.cashMachine.card.Card;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
 import pl.sda.rafal.zientara.cashMachine.model.CashMachineStorage;
+import pl.sda.rafal.zientara.cashMachine.securityLoad.Cryptology;
+import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -14,28 +18,42 @@ public class DashboardPresenter implements DashboardContract.Presenter {
     private final DashboardContract.View view;
     private final CashMachineStorage machineStorage;
 
+    private Card card;
+
     private List<Cash> notesToWithdraw;
     private List<Cash> tempNotesInCashMachine;
     private  List<Cash> availableMoney;
+    private final FileOperations fO;
+    private final Cryptology code = new Cryptology();
 
-    DashboardPresenter(DashboardContract.View view, CashMachineStorage machineStorage) {
+    DashboardPresenter(DashboardContract.View view, CashMachineStorage machineStorage,Card card) {
         this.view = view;
         this.machineStorage = machineStorage;
+        this.card = card;
+        fO = new FileOperations(StaticData.PATH_TO_RESOURCES+card.getCardNumber()+StaticData.CARD_FILE_EXTENSION);
+        System.out.println(card);
     }
 
+
     @Override
-    public void getCash(String value) {
+    public void getCash(String value) throws Exception {
         tempNotesInCashMachine();
         availableMoney_Sort();
-
+        int actualBalance = Integer.parseInt(card.getBalance().trim());
         if(Check.isNumeric(value)) {
             int amount = Integer.parseInt(value.trim());
             if (isPossibleWithdraw(amount)  && amount <= getMoneyInCashMachine()) {
                 notesToWithdraw = new LinkedList<>();
-                cashWithdraw(amount);
-                System.out.println(getTotalGivenMoney());
-
-                view.onWithdrawalConfirm(notesToWithdraw);
+                actualBalance -= amount;
+                if(actualBalance >= 0) {
+                    cashWithdraw(amount);
+                    System.out.println(card.getBalance());
+                    card.setBalance(String.valueOf(actualBalance));
+                    fO.writeDataToFile("1"+code.encrypt(card.cardData_forSave(), StaticData.BANK_ENCRYPT_CODE+card.getPin()));
+                    view.onWithdrawalConfirm(notesToWithdraw);
+                }else{
+                    view.onNotEnoughBalance();
+                }
             } else if (!isPossibleWithdraw(amount)  && amount <= getMoneyInCashMachine()) {
                 view.notDivisibleByNotesError();
             } else {

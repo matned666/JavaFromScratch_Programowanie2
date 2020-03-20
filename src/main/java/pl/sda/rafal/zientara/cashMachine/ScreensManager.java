@@ -39,8 +39,9 @@ public class ScreensManager implements
 
     @Override
     public void onCorrectPin(Card card) {
+        this.card = pinScreen.getCard();
         pinScreen.hide();
-        this.card = card;
+        System.out.println(card);
         showMenu();
     }
 
@@ -79,7 +80,7 @@ public class ScreensManager implements
 
     @Override
     public void onBalance() {
-
+        System.out.println(card.getBalance());
     }
 
     @Override
@@ -88,7 +89,7 @@ public class ScreensManager implements
         showDashboard();
     }
     private void showDashboard() {
-        dashboardScreen = new DashboardScreen(this);
+        dashboardScreen = new DashboardScreen(this, card);
         dashboardScreen.show();
     }
 
@@ -106,7 +107,7 @@ public class ScreensManager implements
 
     @Override
     public void onInfo() {
-
+        System.out.println(card);
     }
 
     @Override
@@ -118,7 +119,6 @@ public class ScreensManager implements
     @Override
     public void onCorrectCardNum() {
         this.cardNumber = startScreen.getCardNumber();
-        System.out.println(cardNumber);
         startScreen.hide();
         pinScreen = new PinScreen(this, this.cardNumber);
         pinScreen.show();

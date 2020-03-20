@@ -10,6 +10,8 @@ public class DashboardContract {
         void onWithdrawalConfirm(List<Cash> money);
 
         void onPossibleLowestWithdraw();
+        void onNotEnoughBalance();
+        DashboardScreen getDashboardScreen();
 
         void notDivisibleByNotesError();
         void notEnoughNotesError();
@@ -21,7 +23,7 @@ public class DashboardContract {
     }
 
     public interface Presenter {
-        void getCash(String value);
+        void getCash(String value) throws Exception;
         void onTyping(String value);
         List<Cash> getNotesToWithdraw();
         //todo zadbaj o testy!

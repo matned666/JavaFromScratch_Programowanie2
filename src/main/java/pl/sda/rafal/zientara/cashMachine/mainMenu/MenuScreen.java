@@ -16,6 +16,8 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     private  final JButton balance;
     private  final JButton exit;
     private  final JButton changePin;
+    private  final JLabel message;
+
 
     private final Card card;
 
@@ -24,6 +26,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     public MenuScreen(MenuInterface.ScreenListener listener, Card card) {
         this.card = card;
         this.listener = listener;
+        message = new JLabel("HELLO WORLD");
         info = new JButton("Account informations");
         withdraw = new JButton("Withdraw money");
         balance = new JButton("Check your ballance");
@@ -41,8 +44,8 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
         changePin.addActionListener(e -> changePinButtonPress() );
         exit.addActionListener(e -> exitButtonPress() );
 
+        frame.add(message);
         frame.add(info);
-        frame.add(new JLabel(" "));
         frame.add(withdraw);
         frame.add(balance);
         frame.add(changePin);
@@ -53,6 +56,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
 
     @Override
     public void infoButtonPress() {
+        message.setText("Your data is: " + card.getOwnerName()+" "+ card.getOwnerSurname() + ", card number: " + card.getCardNumber());
         listener.onInfo();
     }
 
@@ -63,6 +67,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
 
     @Override
     public void balanceButtonPress() {
+        message.setText("Your actual balance is: " + card.getBalance() + "$");
         listener.onBalance();
     }
 

@@ -99,6 +99,8 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
         @Override
     public void correctPin() {
 
+
+            System.out.println(card);
         listener.onCorrectPin(card);
     }
 

@@ -16,32 +16,32 @@ public class DashboardView implements DashboardContract.View {
     @Override
     public void onWithdrawalConfirm(List<Cash> money) {
         dashboardScreen.onWithdrawalConfirm(money);
-        System.out.println("onWithdrawalConfirm");
     }
 
     @Override
     public void onPossibleLowestWithdraw() {
         dashboardScreen.getMessage().setText("Still too small");
-        System.out.println("onPossibleLowestWithdraw");
+    }
+
+    @Override
+    public void onNotEnoughBalance() {
+        dashboardScreen.getMessage().setText("Not enough cash on your Account, earn more.");
     }
 
     @Override
     public void notDivisibleByNotesError() {
         dashboardScreen.getMessage().setText("Not divisible by available notes, try in Afghanistan.");
-        System.out.println("notDivisibleByNotesError");
     }
 
     @Override
     public void notEnoughNotesError() {
         dashboardScreen.getMessage().setText("Sorry, but there are no available notes, Try in another cash machine");
-        System.out.println("notEnoughNotesError");
     }
 
     @Override
     public void notNumericError() {
         dashboardScreen.getMessage().setText("Not numeric");
         disableConfirmButton();
-        System.out.println("notNumericError");
     }
 
 
@@ -49,7 +49,6 @@ public class DashboardView implements DashboardContract.View {
     public void hideError() {
         dashboardScreen.getMessage().setText("");
         enableConfirmButton();
-        System.out.println("hideError");
     }
 
     @Override
@@ -60,5 +59,10 @@ public class DashboardView implements DashboardContract.View {
     @Override
     public void disableConfirmButton() {
         dashboardScreen.getConfirm().setVisible(false);
+    }
+
+    @Override
+    public DashboardScreen getDashboardScreen() {
+        return dashboardScreen;
     }
 }

@@ -28,7 +28,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
         frame= new JFrame("Change Pin");
 
         frame.setSize(600, 400);
-        frame.setLayout(new GridLayout(9, 1));
+        frame.setLayout(new GridLayout(10, 1));
         frame.add(new JLabel("Your old password:"));
         frame.add(oldPassword);
         frame.add(new JLabel("Your new password: "));

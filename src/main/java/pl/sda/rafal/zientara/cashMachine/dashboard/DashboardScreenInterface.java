@@ -1,5 +1,6 @@
 package pl.sda.rafal.zientara.cashMachine.dashboard;
 
+import pl.sda.rafal.zientara.cashMachine.card.Card;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
 
 import javax.swing.*;
@@ -13,6 +14,10 @@ public interface DashboardScreenInterface {
     List<Cash> getNotesToWithdraw();
 
     JButton getConfirm();
+
+    Card getCard();
+
+    void setCard(Card card);
 
     interface ScreenListener {
         void onCashWithdrawal(List<Cash> money);

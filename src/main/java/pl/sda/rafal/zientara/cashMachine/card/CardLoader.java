@@ -15,7 +15,6 @@ public class CardLoader {
     private String loadedData;
     private String decodedData;
     private String separatedEncodedData;
-    private String pin;
     private Card card;
     private boolean isPassed;
     private boolean isBlocked;
@@ -54,6 +53,7 @@ public class CardLoader {
             decodedData=code.decrypt(separatedEncodedData,keyMaker(pin));
             fileOperations.writeDataToFile("1"+separatedEncodedData);
             createCard();
+            card.setPin(pin);
         }else{
             isPassed = false;
             pinCondition++;
@@ -63,14 +63,12 @@ public class CardLoader {
     }
 
     private void createCard() {
-        if (!isBlocked) {
             String[] tempArr = decodedData.split(SEPARATOR);
             card = new Card.Builder(cardNumber)
                     .ownerName(tempArr[0])
                     .ownerSurname(tempArr[1])
                     .balance(tempArr[2])
                     .build();
-        }
     }
 
     private void getseperatedData(){

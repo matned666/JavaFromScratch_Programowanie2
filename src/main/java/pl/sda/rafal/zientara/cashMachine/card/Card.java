@@ -8,6 +8,7 @@ public class Card {
     private String ownerName;
     private String ownerSurname;
     private String balance;
+    private String pin;
     private final String SEPARATOR = StaticData.SEPARATOR;
 
 
@@ -45,6 +46,14 @@ public class Card {
                 balance;
     }
 
+    public String getPin() {
+        return pin;
+    }
+
+    public void setPin(String pin) {
+        this.pin = pin;
+    }
+
     public String toString() {
         return "Builder{" +
                 "cardNumber='" + cardNumber + '\'' +
@@ -54,10 +63,11 @@ public class Card {
                 '}';
     }
 
+
+
     public static class Builder {
 
         private String cardNumber;
-
 
         private String ownerName;
         private String ownerSurname;
@@ -69,6 +79,8 @@ public class Card {
         public Builder(String cardNumber) {
             this.cardNumber = cardNumber;
         }
+
+
 
         public Builder ownerName(String ownerName) {
             this.ownerName = ownerName;

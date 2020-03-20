@@ -46,8 +46,8 @@ public class PinPresenter implements PinContract.Presenter {
             cardloader.ENTER_PIN(pin.trim());
 
             if(cardloader.isPassed()) {
-                view.correctPin();
                 pinScreen.setCard(getCard());
+                view.correctPin();
 
             }
             else view.wrongPin();
