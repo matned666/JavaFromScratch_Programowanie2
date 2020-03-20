@@ -11,63 +11,23 @@ import java.security.spec.KeySpec;
 
 public class Cryptology {
 
-    private String key1;
-    private String key2;
     private static final int KEY_LENGTH = 24;
     private static final String UNICODE_FORMAT = "UTF8";
     private static final String DESEDE_ENCRYPTION_SCHEME = "DESede";
 
     private Cipher cipher;
     private SecretKey key;
-    private String pin;
-    private String cardNumber;
 
-    public Cryptology(String cardNumber) {
-
-        this.cardNumber = cardNumber;
-        key1 = key2Generator(false);
-        key2 = key2Generator(true);
-
+    public boolean checkKey(String text, String key) throws Exception {
+            String generatedKey = keyGenerator(key);
+            String tryMe = decrypt(text, generatedKey);
+            return tryMe != null;
     }
 
-    public Cryptology(String cardNumber, String pin) {
-        this.cardNumber = cardNumber;
-        this.pin = pin;
-        key1 = key2Generator(false);
-        key2 = key2Generator(true);
-        }
 
-    public String encrypt(String unencryptedText) throws Exception {
-        setEncryptionKey(key2);
-        String encryptLevel_1_Str = encryptInner(unencryptedText);
-        return encryptLevel_1_Str;
-    }
-
-    public String encrypt(String unencryptedText, String cardData) throws Exception {
-        // 2 levels (level 1 for card wrong pin counter)
-        String encryptedText1 = encrypt(unencryptedText);
-        setEncryptionKey(key1);
-        String encryptLevel_2_Str = cardData + encryptedText1;
-        return encryptInner(encryptLevel_2_Str);
-    }
-
-    public String decryptLevel1(String encryptedText) throws Exception {
-        setEncryptionKey(key1);
-        return decryptInner(encryptedText);
-    }
-
-    public String decryptLevel2(String encryptedText) throws Exception {
-        setEncryptionKey(key2);
-        return decryptInner(encryptedText);
-    }
-
-    public String encryptToBeNeverDecrypted(String unencryptedText) throws Exception {
-        setEncryptionKey(generatedRandomKey());
-        return encryptInner(unencryptedText);
-    }
-
-    private String encryptInner(String unencryptedString) {
+    public String encrypt(String unencryptedString, String encryptKey) throws Exception {
         String encryptedString;
+        setEncryptionKey(keyGenerator(encryptKey));
         try {
             cipher.init(Cipher.ENCRYPT_MODE, key);
             byte[] plainText = unencryptedString.getBytes(UNICODE_FORMAT);
@@ -80,8 +40,9 @@ public class Cryptology {
     }
 
 
-    private String decryptInner(String encryptedString) {
+    public String decrypt(String encryptedString, String decryptKey) throws Exception {
         String decryptedText;
+        setEncryptionKey(keyGenerator(decryptKey));
         try {
             cipher.init(Cipher.DECRYPT_MODE, key);
             byte[] encryptedText = Base64.decodeBase64(encryptedString);
@@ -102,34 +63,20 @@ public class Cryptology {
         key = skf.generateSecret(ks);
     }
 
-    private String key2Generator(boolean keyTypeFlag_Key1False_Key2True) {
-        StringBuilder keyBuilder = new StringBuilder();
-        if(pin != null && keyTypeFlag_Key1False_Key2True) {
-            StringBuilder pinBuilder = new StringBuilder(pin);
-            for (int i = pin.length()-1; i >= 0; i--) {
-                pinBuilder.append(pin.charAt(i));
+    private String keyGenerator(String keyBase) {
+        StringBuilder keyBuilder = new StringBuilder(keyBase);
+        StringBuilder keyBaseBuilder = new StringBuilder(keyBase);
+            for (int i = keyBase.length()-1; i >= 0; i--) {
+                keyBaseBuilder.append(keyBase.charAt(i));
             }
             int counter = 0;
             for (int i = 1 ; i <= KEY_LENGTH; i++){
-                keyBuilder.append(pinBuilder.charAt(counter));
+                keyBuilder.append(keyBaseBuilder.charAt(counter));
                 counter++;
-                if(counter >= pinBuilder.length()) counter = 0;
+                if(counter >= keyBaseBuilder.length()) counter = 0;
             }
-        } else {
-            int counter = 0;
-            for (int i = 1 ; i <= KEY_LENGTH; i++){
-                keyBuilder.append(cardNumber.charAt(counter));
-                counter++;
-                if(counter >= cardNumber.length()) counter = 0;
-            }
-        }
         return String.valueOf(keyBuilder);
     }
-
-    private String generatedRandomKey() {
-        return RandomStringUtils.random(KEY_LENGTH, true, true);
-    }
-
 
 }
 

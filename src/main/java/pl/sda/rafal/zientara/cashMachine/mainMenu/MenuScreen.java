@@ -1,6 +1,7 @@
 package pl.sda.rafal.zientara.cashMachine.mainMenu;
 
 import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
+import pl.sda.rafal.zientara.cashMachine.card.Card;
 import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 
 import javax.swing.*;
@@ -16,9 +17,12 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     private  final JButton exit;
     private  final JButton changePin;
 
+    private final Card card;
+
     private final MenuInterface.ScreenListener listener;
 
-    public MenuScreen(MenuInterface.ScreenListener listener) {
+    public MenuScreen(MenuInterface.ScreenListener listener, Card card) {
+        this.card = card;
         this.listener = listener;
         info = new JButton("Account informations");
         withdraw = new JButton("Withdraw money");
@@ -74,34 +78,3 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
 }
 
 
-class Main{
-    public static void main(String[] args) {
-        MenuScreen menu = new MenuScreen(new MenuInterface.ScreenListener() {
-            @Override
-            public void onBalance() {
-
-            }
-
-            @Override
-            public void onWithdraw() {
-
-            }
-
-            @Override
-            public void onExit() {
-
-            }
-
-            @Override
-            public void onChangePin() {
-
-            }
-
-            @Override
-            public void onInfo() {
-
-            }
-
-        });
-    }
-}

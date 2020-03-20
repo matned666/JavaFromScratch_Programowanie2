@@ -68,7 +68,7 @@ class PinPresenterTest {
     }
 
     @Test
-    public void correctPinConfirmed() {
+    public void correctPinConfirmed() throws Exception {
         // given when
         presenter.onPinConfirmed("1234");
 
@@ -76,7 +76,7 @@ class PinPresenterTest {
         verify(view).correctPin();
     }
     @Test
-    public void wrongPinConfirmed() {
+    public void wrongPinConfirmed() throws Exception {
         // given when
         presenter.onPinConfirmed("0000");
 

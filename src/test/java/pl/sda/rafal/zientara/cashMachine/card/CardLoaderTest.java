@@ -2,7 +2,10 @@ package pl.sda.rafal.zientara.cashMachine.card;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.sda.rafal.zientara.cashMachine.StaticData;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,24 +16,23 @@ class CardLoaderTest {
 
     private FileOperations fileOperations;
     private CardLoader loader;
-
+    private String CORRECT_PIN = "1234";
 
 
     //Pin is '1234'
     @BeforeEach
     void setup() throws Exception {
         fileOperations = new FileOperations(PATH);
-        fileOperations.writeDataToFile("e6tufv0yfmfHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==");
+        fileOperations.writeDataToFile("1jhs9NziaDF7hpVDYvDV0W3WveL0pSUC5whcz5rQl/RA=");
         loader = new CardLoader(TEST_CARD_NUMBER);
     }
 
     @Test
     void correctPinEnteringLoadsCorrectData() throws Exception {
-        loader.ENTER_PIN("1234");
+        loader.ENTER_PIN(CORRECT_PIN);
 
         Card card = loader.getCard();
 
-        assertEquals(card.getPinCondition(),PinCondition.FIRST_ATTEMPT);
         assertEquals(card.getBalance(),"2300");
         assertEquals(card.getOwnerName(),"Mateusz");
         assertEquals(card.getOwnerSurname(),"Niedbal");
@@ -38,43 +40,50 @@ class CardLoaderTest {
 
     @Test
     void incorrectPinEnteringSavesDataWithNextPinAttempt() throws Exception {
+
         loader.ENTER_PIN("2356");
         loader = new CardLoader(TEST_CARD_NUMBER);
-
-        assertEquals(loader.getPinCondition(),PinCondition.SECOND_ATTEMPT);
-
         loader.ENTER_PIN("2056");
+        assertEquals(loader.getPinCondition(),3);
         loader = new CardLoader(TEST_CARD_NUMBER);
+        loader.ENTER_PIN(CORRECT_PIN);
+        Card card = loader.getCard();
 
-        assertEquals(loader.getPinCondition(),PinCondition.THIRD_ATTEMPT);
+        assertEquals(card.getOwnerName(),"Mateusz");
+        assertEquals(card.getOwnerSurname(),"Niedbal");
+        assertEquals(card.getBalance(),"2300");
+
     }
 
     @Test
     void onSecondAttemptCanStillLoadData() throws Exception {
+
         loader.ENTER_PIN("2356");
         loader = new CardLoader(TEST_CARD_NUMBER);
 
-        loader.ENTER_PIN("1234");
+        loader.ENTER_PIN(CORRECT_PIN);
+        assertEquals(loader.getPinCondition(),2);
         Card card = loader.getCard();
 
-        assertEquals(card.getPinCondition(),PinCondition.FIRST_ATTEMPT);
+
         assertEquals(card.getOwnerName(),"Mateusz");
         assertEquals(card.getOwnerSurname(),"Niedbal");
         assertEquals(card.getBalance(),"2300");
+
     }
 
    @Test
     void onThirdAttemptCanStillLoadData() throws Exception {
+
        loader.ENTER_PIN("2356");
        loader = new CardLoader(TEST_CARD_NUMBER);
        loader.ENTER_PIN("0396");
+       assertEquals(loader.getPinCondition(),3);
        loader = new CardLoader(TEST_CARD_NUMBER);
-       assertEquals(loader.getPinCondition(),PinCondition.THIRD_ATTEMPT);
 
-       loader.ENTER_PIN("1234");
+       loader.ENTER_PIN(CORRECT_PIN);
        Card card = loader.getCard();
 
-       assertEquals(card.getPinCondition(),PinCondition.FIRST_ATTEMPT);
        assertEquals(card.getOwnerName(),"Mateusz");
        assertEquals(card.getOwnerSurname(),"Niedbal");
        assertEquals(card.getBalance(),"2300");
@@ -82,9 +91,27 @@ class CardLoaderTest {
 
     @Test
     void thirdIncorrectPinEnteringAttemptBlocksCardPermanently() throws Exception {
-        fileOperations.writeDataToFile("w2uakdxpFSXHy7LXyL18lmmKB3gfN/CqsKskr75HSZKZ8zGHYWhqXudTCndxn7Z3PFQtS+9vezpBuaZHccBeFQ==");
         loader = new CardLoader(TEST_CARD_NUMBER);
-        loader.ENTER_PIN("2356");
-        assertThrows(RuntimeException.class, () -> loader = new CardLoader(TEST_CARD_NUMBER));
+        loader.ENTER_PIN("5634");
+        loader = new CardLoader(TEST_CARD_NUMBER);
+        loader.ENTER_PIN("1344");
+        loader = new CardLoader(TEST_CARD_NUMBER);
+        loader.ENTER_PIN("4444");
+
+        CardLoader loader34 = new CardLoader(TEST_CARD_NUMBER);
+
+        Card card12 = loader34.getCard();
+        assertThrows(NullPointerException.class, () -> card12.getOwnerName());
+        assertNull(card12);
+
+
+        loader34.ENTER_PIN(CORRECT_PIN);
+
+        Card card = loader34.getCard();
+
+        assertNull(card);
+
     }
+
+
 }

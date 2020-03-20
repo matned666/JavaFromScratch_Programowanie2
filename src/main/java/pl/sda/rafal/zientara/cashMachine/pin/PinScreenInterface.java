@@ -1,5 +1,7 @@
 package pl.sda.rafal.zientara.cashMachine.pin;
 
+import pl.sda.rafal.zientara.cashMachine.card.Card;
+
 import javax.swing.*;
 
 public interface PinScreenInterface {
@@ -13,9 +15,11 @@ public interface PinScreenInterface {
 
     JPasswordField getPasswordField();
 
+    String getCardNumber();
+
     public interface ScreenListener {
         //info
-        void onCorrectPin();
+        void onCorrectPin(Card card);
 
         void onWrongPin();
     }

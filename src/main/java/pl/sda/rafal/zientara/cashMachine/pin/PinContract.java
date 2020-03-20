@@ -1,5 +1,7 @@
 package pl.sda.rafal.zientara.cashMachine.pin;
 
+import pl.sda.rafal.zientara.cashMachine.card.Card;
+
 public class PinContract {
 
     public interface View {
@@ -19,6 +21,7 @@ public class PinContract {
 
     public interface Presenter {
         void onPinTyping(String pin);
-        void onPinConfirmed(String pin);
+        void onPinConfirmed(String pin) throws Exception;
+        Card getCard();
     }
 }

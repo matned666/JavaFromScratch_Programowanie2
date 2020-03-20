@@ -1,6 +1,8 @@
 package pl.sda.rafal.zientara.cashMachine.pin;
 
 import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
+import pl.sda.rafal.zientara.cashMachine.ScreensManager;
+import pl.sda.rafal.zientara.cashMachine.card.Card;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +14,20 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
     private final JLabel message;
     private final JButton confirm;
 
+    private final String cardNumber;
+
     private final PinContract.Presenter presenter = new PinPresenter(this);
     private final PinContract.View view = new PinView(this,presenter);
 
     private final ScreenListener listener;//
 
+    private Card card;
+
     PinScreen() {
+        cardNumber = null;
         this.listener = new ScreenListener() {
             @Override
-            public void onCorrectPin() {
+            public void onCorrectPin(Card card) {
 
             }
 
@@ -35,7 +42,8 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
         initialize();
     }
 
-    public PinScreen(ScreenListener listener) {
+    public PinScreen(ScreensManager listener, String cardNumber) {
+        this.cardNumber = cardNumber;
         this.listener = listener;
         passwordField = new JPasswordField();
         message = new JLabel();
@@ -56,7 +64,13 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
 
         frame.add(message);
 
-        confirm.addActionListener(e -> presenter.onPinConfirmed(passwordField.getText()));
+        confirm.addActionListener(e -> {
+            try {
+                presenter.onPinConfirmed(passwordField.getText());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
 
         confirm.setVisible(false);
         frame.add(confirm);
@@ -84,7 +98,8 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
 
         @Override
     public void correctPin() {
-        listener.onCorrectPin();
+
+        listener.onCorrectPin(card);
     }
 
         @Override
@@ -105,5 +120,18 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
     @Override
     public JPasswordField getPasswordField() {
         return passwordField;
+    }
+
+    @Override
+    public String getCardNumber() {
+        return this.cardNumber;
+    }
+
+    public Card getCard() {
+        return card;
+    }
+
+    public void setCard(Card card) {
+        this.card = card;
     }
 }
