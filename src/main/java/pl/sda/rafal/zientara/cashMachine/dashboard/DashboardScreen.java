@@ -28,6 +28,7 @@ public class DashboardScreen extends BaseSwingScreen implements DashboardScreenI
         frame = new JFrame("Insert amount of cash");
         frame.setSize(600, 400);
         frame.setLayout(new GridLayout(0, 1));
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.add(new Label("Cash:"));
         moneyAmount = new JPasswordField();

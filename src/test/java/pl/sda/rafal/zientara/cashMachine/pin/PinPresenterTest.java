@@ -18,9 +18,9 @@ class PinPresenterTest {
     }
 
     @Test
-    public void tooShortPin() {
+    public void tooShortPin() throws Exception {
         // given when
-        presenter.onPinTyping("1");
+        presenter.onPinTyping("1", '1');
 
         // then
         verify(view).disableConfirmButton();
@@ -28,9 +28,9 @@ class PinPresenterTest {
     }
 
     @Test
-    public void tooLongPin() {
+    public void tooLongPin() throws Exception {
         // given when
-        presenter.onPinTyping("12345");
+        presenter.onPinTyping("12345",'5');
 
         // then
         verify(view).disableConfirmButton();
@@ -38,9 +38,9 @@ class PinPresenterTest {
     }
 
     @Test
-    public void onlyDigitsPin() {
+    public void onlyDigitsPin() throws Exception {
         // given when
-        presenter.onPinTyping("1abc");
+        presenter.onPinTyping("1abc", 'c');
 
         // then
         verify(view).disableConfirmButton();
@@ -48,9 +48,9 @@ class PinPresenterTest {
     }
 
     @Test
-    public void correctPin_buttonShouldBeEnabled() {
+    public void correctPin_buttonShouldBeEnabled() throws Exception {
         // given when
-        presenter.onPinTyping("1234");
+        presenter.onPinTyping("1234", '4');
 
         // then
         verify(view).enableConfirmButton();
@@ -58,9 +58,9 @@ class PinPresenterTest {
     }
 
     @Test
-    public void correctPinWithSpaces_buttonShouldBeEnabled() {
+    public void correctPinWithSpaces_buttonShouldBeEnabled() throws Exception {
         // given when
-        presenter.onPinTyping("  1234     ");//hint use .trim()
+        presenter.onPinTyping("  1234     ",' ');//hint use .trim()
 
         // then
         verify(view).enableConfirmButton();

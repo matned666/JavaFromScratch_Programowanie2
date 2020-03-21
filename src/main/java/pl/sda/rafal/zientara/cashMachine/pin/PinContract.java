@@ -20,7 +20,7 @@ public class PinContract {
     }
 
     public interface Presenter {
-        void onPinTyping(String pin);
+        void onPinTyping(String pin, char typedChar) throws Exception;
         void onPinConfirmed(String pin) throws Exception;
         Card getCard();
     }

@@ -23,7 +23,7 @@ public class PinPresenter implements PinContract.Presenter {
     }
 
     @Override
-    public void onPinTyping(String pin) {
+    public void onPinTyping(String pin, char typedChar) throws Exception {
         if (pin.trim().length() < PIN_LENGTH && Check.isNumeric(pin)) {
             view.showTooShortPinError();
             view.disableConfirmButton();
@@ -34,6 +34,7 @@ public class PinPresenter implements PinContract.Presenter {
             view.showOnlyDigitsError();
             view.disableConfirmButton();
         } else{
+            if(typedChar == 10) onPinConfirmed(pin);
             view.hideError();
             view.enableConfirmButton();
         }

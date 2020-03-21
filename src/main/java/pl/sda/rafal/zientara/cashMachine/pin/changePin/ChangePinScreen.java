@@ -5,6 +5,7 @@ import pl.sda.rafal.zientara.cashMachine.card.Card;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -41,6 +42,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
 
         frame= new JFrame("Change Pin");
 
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLayout(new GridLayout(11, 1));
         frame.add(new JLabel("Your old password:"));
@@ -62,7 +64,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
             }
         });
         backButton.addActionListener(e -> backButtonPress() );
-
+        view.disableConfirmButton();
         oldPassword.addKeyListener(keyListener());
         newPassword.addKeyListener(keyListener());
         newPasswordConfirm.addKeyListener(keyListener());
@@ -74,6 +76,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
     @Override
     public void confirmButtonPress() {
         JDialog confirmDialog = new JDialog(frame);
+        confirmDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
         confirmDialog.setSize(400,200);
         confirmDialog.setLayout(new GridLayout(5,1));
         confirmDialog.add(new JLabel());
@@ -82,6 +85,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
         confirmDialog.add(new JLabel());
         JButton okButton = new JButton("OK");
         confirmDialog.add(okButton);
+
         okButton.addActionListener(e -> listener.onCorrectChangePin());
         confirmDialog.setVisible(true);
     }
@@ -144,7 +148,11 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
 
             @Override
             public void keyReleased(KeyEvent e) {
-                presenter.onPinTyping(e.getClass().toString());
+                try {
+                    presenter.onPinTyping(e.getClass().toString(), e.getKeyChar());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         };
     }

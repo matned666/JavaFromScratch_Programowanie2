@@ -24,7 +24,7 @@ public class CardLoader {
 
     public CardLoader(String cardNumber) throws Exception {
         this.cardNumber = cardNumber;
-        String path = StaticData.PATH_TO_RESOURCES + cardNumber + StaticData.CARD_FILE_EXTENSION;
+        String path = cardNumber;
         fileOperations = new FileOperations(path);
         loadedData = fileOperations.readDataFromFile();
         code = new Cryptology();
@@ -52,7 +52,7 @@ public class CardLoader {
             isPassed = true;
             decodedData=code.decrypt(separatedEncodedData,keyMaker(pin));
             fileOperations.writeDataToFile("1"+separatedEncodedData);
-            createCard();
+            createCard(pin);
             card.setPin(pin);
         }else{
             isPassed = false;
@@ -62,13 +62,14 @@ public class CardLoader {
         }
     }
 
-    private void createCard() {
+    private void createCard(String pin) {
             String[] tempArr = decodedData.split(SEPARATOR);
             card = new Card.Builder(cardNumber)
                     .ownerName(tempArr[0])
                     .ownerSurname(tempArr[1])
                     .balance(tempArr[2])
                     .build();
+            card.setPin(pin);
     }
 
     private void getseperatedData(){

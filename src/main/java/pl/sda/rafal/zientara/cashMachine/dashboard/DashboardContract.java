@@ -26,6 +26,5 @@ public class DashboardContract {
         void getCash(String value) throws Exception;
         void onTyping(String value);
         List<Cash> getNotesToWithdraw();
-        //todo zadbaj o testy!
     }
 }

@@ -54,14 +54,7 @@ public class Card {
         this.pin = pin;
     }
 
-    public String toString() {
-        return "Builder{" +
-                "cardNumber='" + cardNumber + '\'' +
-                ", ownerName='" + ownerName + '\'' +
-                ", ownerSurname='" + ownerSurname + '\'' +
-                ", balance='" + balance + '\'' +
-                '}';
-    }
+
 
 
 

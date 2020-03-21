@@ -56,6 +56,7 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
         //frame ma dostêp protected
         frame = new JFrame("Insert PIN");
         frame.setSize(400, 300);
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(0, 1));
 
         frame.add(new Label("Pin:"));
@@ -87,7 +88,11 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
 
                                          @Override
                                          public void keyReleased(KeyEvent e) {
-                                             presenter.onPinTyping(passwordField.getText());
+                                             try {
+                                                 presenter.onPinTyping(passwordField.getText(), e.getKeyChar());
+                                             } catch (Exception ex) {
+                                                 ex.printStackTrace();
+                                             }
 
 
                                          }

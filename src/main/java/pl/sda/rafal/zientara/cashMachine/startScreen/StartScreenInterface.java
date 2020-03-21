@@ -14,7 +14,6 @@ public interface StartScreenInterface {
 
     JButton getConfirm();
 
-    JTextField getTextField();
 
     interface ScreenListener {
         //info

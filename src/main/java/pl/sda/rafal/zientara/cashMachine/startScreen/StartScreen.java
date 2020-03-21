@@ -4,8 +4,14 @@ import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.dnd.DnDConstants;
+import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetDropEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
+import java.util.LinkedList;
 
 public class StartScreen extends BaseSwingScreen implements StartScreenInterface {
 
@@ -15,12 +21,10 @@ public class StartScreen extends BaseSwingScreen implements StartScreenInterface
     private final StartContract.Presenter presenter = new StartPresenter(this, view);
     private final JButton confirm;
     private final JLabel message;
-    private final JTextField textField;
     private String cardNumber;
 
     public StartScreen(ScreenListener listener) {
         this.listener = listener;
-        textField = new JTextField();
         message = new JLabel("Welcome");
         confirm = new JButton("Accept");
         initialize();
@@ -29,57 +33,47 @@ public class StartScreen extends BaseSwingScreen implements StartScreenInterface
     private void initialize() {
         frame = new JFrame("Cash machine");
         frame.setSize(400, 300);
-
-        frame.setLayout(new GridLayout(5, 1));
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setLayout(new GridLayout(6, 1));
 
         JLabel image = new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg"));
         frame.add(image);
         frame.add(new Label("Enter your card number:"));
 
-        frame.add(textField);
 
         frame.add(message);
 
-        confirm.addActionListener(e -> {
-            try {
-                presenter.onConfirm(textField.getText());
-            } catch (Exception ex) {
-                ex.printStackTrace();
+        JTextArea dropFileArea = new JTextArea("Drop your card file here:");
+
+        dropFileArea.setDropTarget(new DropTarget() {
+            public synchronized void drop(DropTargetDropEvent evt) {
+                try {
+                    java.util.List<File> droppedFiles = new LinkedList<>();
+
+                    if (droppedFiles.size() > 1) {
+                        droppedFiles.clear();
+                    }
+                    evt.acceptDrop(DnDConstants.ACTION_COPY);
+                    droppedFiles = (java.util.List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
+                    cardNumber = droppedFiles.get(0).getAbsolutePath();
+                    presenter.onConfirm(cardNumber);
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
             }
         });
 
+        frame.add(dropFileArea);
+
         confirm.setVisible(false);
         frame.add(confirm);
-        textField.addKeyListener(new KeyListener() {
-                                     @Override
-                                     public void keyTyped(KeyEvent e) {
-                                     }
-
-                                     @Override
-                                     public void keyPressed(KeyEvent e) {
-
-                                     }
-
-                                     @Override
-                                     public void keyReleased(KeyEvent e) {
-                                         try {
-                                             presenter.onType(textField.getText());
-                                         } catch (ClassNotFoundException ex) {
-                                             ex.printStackTrace();
-                                         }
-
-
-                                     }
-                                 }
-
-        );
 
 
     }
 
     @Override
     public void correctCardNum() {
-        setCardNumber();
         listener.onCorrectCardNum();
     }
 
@@ -99,17 +93,8 @@ public class StartScreen extends BaseSwingScreen implements StartScreenInterface
     }
 
     @Override
-    public JTextField getTextField() {
-        return textField;
-    }
-
-    @Override
     public String getCardNumber() {
         return this.cardNumber;
-    }
-
-    private void setCardNumber() {
-        this.cardNumber = textField.getText();
     }
 
 

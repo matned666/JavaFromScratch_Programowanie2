@@ -6,6 +6,8 @@ import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class MenuScreen extends BaseSwingScreen implements MenuInterface{
 
@@ -13,6 +15,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
 
     private  final JButton info;
     private  final JButton withdraw;
+    private  final JButton deposit;
     private  final JButton balance;
     private  final JButton exit;
     private  final JButton changePin;
@@ -26,20 +29,23 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     public MenuScreen(MenuInterface.ScreenListener listener, Card card) {
         this.card = card;
         this.listener = listener;
-        message = new JLabel("HELLO WORLD");
+        message = new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg"));
         info = new JButton("Account informations");
         withdraw = new JButton("Withdraw money");
+        deposit = new JButton("Deposit money");
         balance = new JButton("Check your ballance");
         exit = new JButton("EXIT");
         changePin = new JButton("Change PIN");
 
         frame= new JFrame("MAIN MENU");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.setSize(600, 400);
-        frame.setLayout(new GridLayout(6, 1));
+        frame.setLayout(new GridLayout(7, 1));
 
         info.addActionListener(e -> infoButtonPress() );
         withdraw.addActionListener(e -> withdrawButtonPress() );
+        deposit.addActionListener(e -> depositButtonPress() );
         balance.addActionListener(e -> balanceButtonPress() );
         changePin.addActionListener(e -> changePinButtonPress() );
         exit.addActionListener(e -> exitButtonPress() );
@@ -47,6 +53,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
         frame.add(message);
         frame.add(info);
         frame.add(withdraw);
+        frame.add(deposit);
         frame.add(balance);
         frame.add(changePin);
         frame.add(exit);
@@ -55,9 +62,13 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     }
 
     @Override
+    public void depositButtonPress() {
+        listener.onDeposit();
+    }
+
+    @Override
     public void infoButtonPress() {
-        message.setText("Your data is: " + card.getOwnerName()+" "+ card.getOwnerSurname() + ", card number: " + card.getCardNumber());
-        listener.onInfo();
+        dialog("Your data is: " + card.getOwnerName()+" "+ card.getOwnerSurname());
     }
 
     @Override
@@ -67,8 +78,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
 
     @Override
     public void balanceButtonPress() {
-        message.setText("Your actual balance is: " + card.getBalance() + "$");
-        listener.onBalance();
+        dialog("Your actual balance is: " + card.getBalance() + "$");
     }
 
     @Override
@@ -80,6 +90,29 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     public void changePinButtonPress() {
         listener.onChangePin();
     }
+
+    @Override
+    public void dialog(String message) {
+        JDialog dialog = new JDialog(frame);
+        dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        dialog.setLayout(new GridLayout(0,1));
+        dialog.setSize(300,300);
+        JButton confirm = new JButton("OK");
+        confirm.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dialog.dispose();
+            }
+        });
+        dialog.add(new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg")));
+        dialog.add(new JLabel());
+        dialog.add(new JLabel(message));
+        dialog.add(new JLabel());
+        dialog.add(confirm);
+        dialog.setVisible(true);
+    }
+
+
 }
 
 

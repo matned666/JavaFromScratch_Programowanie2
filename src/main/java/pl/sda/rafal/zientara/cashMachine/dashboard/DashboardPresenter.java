@@ -30,7 +30,7 @@ public class DashboardPresenter implements DashboardContract.Presenter {
         this.view = view;
         this.machineStorage = machineStorage;
         this.card = card;
-        fO = new FileOperations(StaticData.PATH_TO_RESOURCES+card.getCardNumber()+StaticData.CARD_FILE_EXTENSION);
+        fO = new FileOperations(card.getCardNumber());
         System.out.println(card);
     }
 

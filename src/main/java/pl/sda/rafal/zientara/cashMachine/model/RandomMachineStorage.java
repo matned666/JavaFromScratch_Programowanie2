@@ -34,4 +34,9 @@ RandomMachineStorage implements CashMachineStorage {
     public void remove(Cash cash) {
         money.remove(cash);
     }
+
+    @Override
+    public void add(Cash cash) {
+        money.add(cash);
+    }
 }

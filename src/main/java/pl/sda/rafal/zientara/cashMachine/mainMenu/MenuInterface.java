@@ -5,10 +5,11 @@ public interface MenuInterface {
 
     void infoButtonPress();
     void withdrawButtonPress();
+    void depositButtonPress();
     void balanceButtonPress();
     void exitButtonPress();
     void changePinButtonPress();
-
+    void dialog(String message);
 
 
     interface ScreenListener {
@@ -17,5 +18,6 @@ public interface MenuInterface {
         void onExit();
         void onChangePin();
         void onInfo();
+        void onDeposit();
     }
 }

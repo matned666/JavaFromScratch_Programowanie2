@@ -2,6 +2,7 @@ package pl.sda.rafal.zientara.cashMachine;
 
 import pl.sda.rafal.zientara.cashMachine.card.Card;
 import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
+import pl.sda.rafal.zientara.cashMachine.deposit.DepositScreen;
 import pl.sda.rafal.zientara.cashMachine.mainMenu.MenuScreen;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
 import pl.sda.rafal.zientara.cashMachine.pin.PinScreen;
@@ -19,12 +20,14 @@ public class ScreensManager implements
         ThanksScreen.ScreenListener,
         MenuScreen.ScreenListener,
         ChangePinScreen.ScreenListener,
-        StartScreen.ScreenListener {
+        StartScreen.ScreenListener,
+        DepositScreen.ScreenListener {
 
     private PinScreen pinScreen;
     private StartScreen startScreen;
     private WrongPinScreen wrongPinScreen;
     private DashboardScreen dashboardScreen;
+    private DepositScreen depositScreen;
     private ThanksScreen thanksScreen;
     private MenuScreen menuScreen;
     private ChangePinScreen changePinScreen;
@@ -74,7 +77,7 @@ public class ScreensManager implements
     @Override
     public void onWithdrawalConfirm() {
         thanksScreen.hide();
-        showMenu();
+        menuScreen.show();
     }
 
     @Override
@@ -117,13 +120,13 @@ public class ScreensManager implements
     @Override
     public void onCorrectChangePin() {
         changePinScreen.hide();
-        showMenu();
+        menuScreen.show();
     }
 
     @Override
     public void onBackButtonPress() {
         changePinScreen.hide();
-        showMenu();
+        menuScreen.show();
     }
 
     @Override
@@ -133,5 +136,24 @@ public class ScreensManager implements
         pinScreen = new PinScreen(this, this.cardNumber);
         pinScreen.show();
 
+    }
+
+    @Override
+    public void onCashDeposit() {
+        depositScreen.hide();
+        menuScreen.show();
+    }
+
+    @Override
+    public void onBackFromDeposit() {
+        depositScreen.hide();
+        menuScreen.show();
+    }
+
+    @Override
+    public void onDeposit() {
+        menuScreen.hide();
+        depositScreen = new DepositScreen(this, card);
+        depositScreen.show();
     }
 }

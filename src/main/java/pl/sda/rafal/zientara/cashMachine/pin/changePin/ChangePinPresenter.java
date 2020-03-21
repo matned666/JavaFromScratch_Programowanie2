@@ -31,7 +31,7 @@ public class ChangePinPresenter implements ChangePinContract.Presenter {
 
 
     @Override
-    public void onPinTyping(String textField) {
+    public void onPinTyping(String textField, char typedChar) throws Exception {
 
           if(!finishStatement(changePinScreen.getNewPinConfirmation()) || !finishStatement(changePinScreen.getNewPin()) || !finishStatement(changePinScreen.getOldPin()) && !finishStatment()) {
               if (ifStatements(1, changePinScreen.getOldPin()) || ifStatements(1, changePinScreen.getNewPin()) || ifStatements(1, changePinScreen.getNewPinConfirmation())) {
@@ -55,6 +55,7 @@ public class ChangePinPresenter implements ChangePinContract.Presenter {
               }
 
           }else{
+              if(typedChar == 10) onConfirm();
               view.hideDifferentPinsError();
               view.enableConfirmButton();
               view.hideError();
@@ -65,7 +66,7 @@ public class ChangePinPresenter implements ChangePinContract.Presenter {
 
     @Override
     public void onConfirm() throws Exception {
-        FO = new FileOperations((StaticData.PATH_TO_RESOURCES + card.getCardNumber() + StaticData.CARD_FILE_EXTENSION));
+        FO = new FileOperations((card.getCardNumber()));
           if(pinIsCorrect()) {
               FO.writeDataToFile("1"+code.encrypt(card.cardData_forSave(), StaticData.BANK_ENCRYPT_CODE + changePinScreen.getNewPin().getText()));
               view.onCorrectPin();

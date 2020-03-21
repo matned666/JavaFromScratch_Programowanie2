@@ -24,7 +24,7 @@ public class ChangePinContract {
     }
 
     public  interface Presenter{
-        void onPinTyping(String TextField);
+        void onPinTyping(String TextField, char typedChar) throws Exception;
 
         void onConfirm() throws Exception;
 

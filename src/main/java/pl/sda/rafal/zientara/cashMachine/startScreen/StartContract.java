@@ -20,7 +20,6 @@ public class StartContract {
     }
 
     public interface Presenter {
-        void onType(String cardNumber) throws ClassNotFoundException;
         void onConfirm(String cardNumber) throws Exception;
     }
 }
