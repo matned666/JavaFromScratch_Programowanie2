@@ -52,7 +52,4 @@ public class PinView implements PinContract.View {
         pinScreen.wrongPin();
     }
 
-    public PinScreen getPinScreen() {
-        return pinScreen;
-    }
 }

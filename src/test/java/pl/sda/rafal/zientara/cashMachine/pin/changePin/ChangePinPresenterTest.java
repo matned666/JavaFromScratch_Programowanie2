@@ -13,7 +13,7 @@ class ChangePinPresenterTest {
     @BeforeEach
     public void setup() {
         view = mock(ChangePinContract.View.class);
-        presenter = new ChangePinPresenter();
+//        presenter = new ChangePinPresenter();
     }
 // TODO ALL TESTS
 
