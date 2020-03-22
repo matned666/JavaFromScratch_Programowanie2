@@ -8,10 +8,7 @@ import java.awt.datatransfer.DataFlavor;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.io.File;
-import java.util.LinkedList;
 
 public class StartScreen extends BaseSwingScreen implements StartScreenInterface {
 
@@ -35,51 +32,35 @@ public class StartScreen extends BaseSwingScreen implements StartScreenInterface
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(6, 1));
-
         JLabel image = new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg"));
         frame.add(image);
         frame.add(new Label("Enter your card number:"));
-
-
         frame.add(message);
-
         JTextArea dropFileArea = new JTextArea("Drop your card file here:");
-
         dropFileArea.setDropTarget(new DropTarget() {
             public synchronized void drop(DropTargetDropEvent evt) {
                 try {
-                    java.util.List<File> droppedFiles = new LinkedList<>();
-
+                    java.util.List<File> droppedFiles;
+                    evt.acceptDrop(DnDConstants.ACTION_COPY);
+                    droppedFiles = (java.util.List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
                     if (droppedFiles.size() > 1) {
                         droppedFiles.clear();
                     }
-                    evt.acceptDrop(DnDConstants.ACTION_COPY);
-                    droppedFiles = (java.util.List<File>) evt.getTransferable().getTransferData(DataFlavor.javaFileListFlavor);
                     cardNumber = droppedFiles.get(0).getAbsolutePath();
                     presenter.onConfirm(cardNumber);
-
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         });
-
         frame.add(dropFileArea);
-
         confirm.setVisible(false);
         frame.add(confirm);
-
-
     }
 
     @Override
     public void correctCardNum() {
         listener.onCorrectCardNum();
-    }
-
-    @Override
-    public void wrongCardNum() {
-
     }
 
     @Override

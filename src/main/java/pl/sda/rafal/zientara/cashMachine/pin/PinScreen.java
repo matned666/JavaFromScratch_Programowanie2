@@ -1,6 +1,7 @@
 package pl.sda.rafal.zientara.cashMachine.pin;
 
 import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
+import pl.sda.rafal.zientara.cashMachine.Check;
 import pl.sda.rafal.zientara.cashMachine.ScreensManager;
 import pl.sda.rafal.zientara.cashMachine.card.Card;
 
@@ -16,29 +17,38 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
 
     private final String cardNumber;
 
-    private final PinContract.Presenter presenter = new PinPresenter(this);
-    private final PinContract.View view = new PinView(this,presenter);
+    private final PinContract.View view = new PinView(this);
+    private final PinContract.Presenter presenter = new PinPresenter(this, view);
 
-    private final ScreenListener listener;//
+    private ScreenListener listener;//
 
     private Card card;
 
-    PinScreen() {
-        cardNumber = null;
-        this.listener = new ScreenListener() {
-            @Override
-            public void onCorrectPin(Card card) {
+//    PinScreen() {
+//        cardNumber = null;
+//        this.listener = new ScreenListener() {
+//            @Override
+//            public void onCorrectPin(Card card) {
+//
+//            }
+//
+//            @Override
+//            public void onWrongPin() {
+//
+//            }
+//        };
+//        passwordField = new JPasswordField();
+//        message = new JLabel();
+//        confirm = new JButton();
+//        initialize();
+//    }
 
-            }
 
-            @Override
-            public void onWrongPin() {
-
-            }
-        };
+    PinScreen(String cardNumber) {
+        this.cardNumber = cardNumber;
         passwordField = new JPasswordField();
         message = new JLabel();
-        confirm = new JButton();
+        confirm = new JButton("Accept");
         initialize();
     }
 
@@ -52,30 +62,22 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
     }
 
     private void initialize() {
-
-        //frame ma dostêp protected
         frame = new JFrame("Insert PIN");
         frame.setSize(400, 300);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setLayout(new GridLayout(0, 1));
-
         frame.add(new Label("Pin:"));
-
         frame.add(passwordField);
-
         frame.add(message);
-
         confirm.addActionListener(e -> {
             try {
-                presenter.onPinConfirmed(passwordField.getText());
+                presenter.onPinConfirmed(Check.getPassword(passwordField));
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
         });
-
         confirm.setVisible(false);
         frame.add(confirm);
-
         passwordField.addKeyListener(new KeyListener() {
                                          @Override
                                          public void keyTyped(KeyEvent e) {
@@ -83,21 +85,18 @@ public class PinScreen extends BaseSwingScreen implements PinScreenInterface {
 
                                          @Override
                                          public void keyPressed(KeyEvent e) {
-
                                          }
 
                                          @Override
                                          public void keyReleased(KeyEvent e) {
+                                             System.out.println(passwordField.getPassword());
                                              try {
-                                                 presenter.onPinTyping(passwordField.getText(), e.getKeyChar());
+                                                 presenter.onPinTyping(Check.getPassword(passwordField), e.getKeyChar());
                                              } catch (Exception ex) {
                                                  ex.printStackTrace();
                                              }
-
-
                                          }
                                      }
-
         );
     }
 

@@ -1,7 +1,5 @@
 package pl.sda.rafal.zientara.cashMachine.pin.changePin;
 
-import javax.swing.*;
-
 public class ChangePinContract {
 
     public interface View{

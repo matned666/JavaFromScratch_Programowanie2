@@ -5,6 +5,8 @@ import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 import pl.sda.rafal.zientara.cashMachine.deposit.DepositScreen;
 import pl.sda.rafal.zientara.cashMachine.mainMenu.MenuScreen;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
+import pl.sda.rafal.zientara.cashMachine.model.CashMachineStorage;
+import pl.sda.rafal.zientara.cashMachine.model.RandomMachineStorage;
 import pl.sda.rafal.zientara.cashMachine.pin.PinScreen;
 import pl.sda.rafal.zientara.cashMachine.pin.changePin.ChangePinScreen;
 import pl.sda.rafal.zientara.cashMachine.startScreen.StartScreen;
@@ -32,12 +34,14 @@ public class ScreensManager implements
     private MenuScreen menuScreen;
     private ChangePinScreen changePinScreen;
 
-    private String cardNumber;
+    private CashMachineStorage storage;
+
     private Card card;
 
     public void start() {
         startScreen = new StartScreen(this);
         startScreen.show();
+        storage = new RandomMachineStorage();
     }
 
     @Override
@@ -47,7 +51,8 @@ public class ScreensManager implements
         showMenu();
     }
 
-    private void showMenu() {
+    @Override
+    public void showMenu() {
         menuScreen = new MenuScreen(this, card);
         menuScreen.show();
     }
@@ -81,16 +86,13 @@ public class ScreensManager implements
     }
 
     @Override
-    public void onBalance() {
-    }
-
-    @Override
     public void onWithdraw() {
         menuScreen.hide();
         showDashboard();
     }
+
     private void showDashboard() {
-        dashboardScreen = new DashboardScreen(this, card);
+        dashboardScreen = new DashboardScreen(this, card, storage);
         dashboardScreen.show();
     }
 
@@ -103,13 +105,8 @@ public class ScreensManager implements
     @Override
     public void onChangePin() {
         menuScreen.hide();
-        changePinScreen = new ChangePinScreen(this,card);
+        changePinScreen = new ChangePinScreen(this, card);
         changePinScreen.show();
-    }
-
-    @Override
-    public void onInfo() {
-        System.out.println(card);
     }
 
     @Override
@@ -131,9 +128,9 @@ public class ScreensManager implements
 
     @Override
     public void onCorrectCardNum() {
-        this.cardNumber = startScreen.getCardNumber();
+        String cardNumber = startScreen.getCardNumber();
         startScreen.hide();
-        pinScreen = new PinScreen(this, this.cardNumber);
+        pinScreen = new PinScreen(this, cardNumber);
         pinScreen.show();
 
     }
@@ -153,7 +150,7 @@ public class ScreensManager implements
     @Override
     public void onDeposit() {
         menuScreen.hide();
-        depositScreen = new DepositScreen(this, card);
+        depositScreen = new DepositScreen(this, card, storage);
         depositScreen.show();
     }
 }

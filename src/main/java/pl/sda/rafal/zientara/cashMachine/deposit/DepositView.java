@@ -1,14 +1,10 @@
 package pl.sda.rafal.zientara.cashMachine.deposit;
 
-import pl.sda.rafal.zientara.cashMachine.model.Cash;
-
-import java.util.List;
-
 public class DepositView implements DepositContract.View {
 
     private DepositScreen depositScreen;
 
-    public DepositView(DepositScreen depositScreen) {
+    DepositView(DepositScreen depositScreen) {
         this.depositScreen = depositScreen;
     }
 

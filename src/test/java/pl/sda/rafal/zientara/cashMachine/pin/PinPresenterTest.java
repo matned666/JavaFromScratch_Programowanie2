@@ -12,13 +12,14 @@ class PinPresenterTest {
     private PinContract.Presenter presenter;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
+        PinScreen pinscr = new PinScreen("src\\main\\resources\\0000000000000000.card");
         view = mock(PinContract.View.class);
-        presenter = new PinPresenter(view);
+        presenter = new PinPresenter(pinscr, view);
     }
 
     @Test
-    public void tooShortPin() throws Exception {
+    void tooShortPin() throws Exception {
         // given when
         presenter.onPinTyping("1", '1');
 
@@ -28,7 +29,7 @@ class PinPresenterTest {
     }
 
     @Test
-    public void tooLongPin() throws Exception {
+    void tooLongPin() throws Exception {
         // given when
         presenter.onPinTyping("12345",'5');
 
@@ -38,7 +39,7 @@ class PinPresenterTest {
     }
 
     @Test
-    public void onlyDigitsPin() throws Exception {
+    void onlyDigitsPin() throws Exception {
         // given when
         presenter.onPinTyping("1abc", 'c');
 
@@ -48,7 +49,7 @@ class PinPresenterTest {
     }
 
     @Test
-    public void correctPin_buttonShouldBeEnabled() throws Exception {
+    void correctPin_buttonShouldBeEnabled() throws Exception {
         // given when
         presenter.onPinTyping("1234", '4');
 
@@ -58,7 +59,7 @@ class PinPresenterTest {
     }
 
     @Test
-    public void correctPinWithSpaces_buttonShouldBeEnabled() throws Exception {
+    void correctPinWithSpaces_buttonShouldBeEnabled() throws Exception {
         // given when
         presenter.onPinTyping("  1234     ",' ');//hint use .trim()
 
@@ -68,7 +69,7 @@ class PinPresenterTest {
     }
 
     @Test
-    public void correctPinConfirmed() throws Exception {
+    void correctPinConfirmed() throws Exception {
         // given when
         presenter.onPinConfirmed("1234");
 
@@ -76,7 +77,7 @@ class PinPresenterTest {
         verify(view).correctPin();
     }
     @Test
-    public void wrongPinConfirmed() throws Exception {
+    void wrongPinConfirmed() throws Exception {
         // given when
         presenter.onPinConfirmed("0000");
 

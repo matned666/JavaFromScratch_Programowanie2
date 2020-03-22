@@ -2,24 +2,11 @@ package pl.sda.rafal.zientara.cashMachine.mainMenu;
 
 import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
 import pl.sda.rafal.zientara.cashMachine.card.Card;
-import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardScreen;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class MenuScreen extends BaseSwingScreen implements MenuInterface{
-
-    private DashboardScreen dashboardScreen;
-
-    private  final JButton info;
-    private  final JButton withdraw;
-    private  final JButton deposit;
-    private  final JButton balance;
-    private  final JButton exit;
-    private  final JButton changePin;
-    private  final JLabel message;
 
 
     private final Card card;
@@ -29,13 +16,13 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
     public MenuScreen(MenuInterface.ScreenListener listener, Card card) {
         this.card = card;
         this.listener = listener;
-        message = new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg"));
-        info = new JButton("Account informations");
-        withdraw = new JButton("Withdraw money");
-        deposit = new JButton("Deposit money");
-        balance = new JButton("Check your ballance");
-        exit = new JButton("EXIT");
-        changePin = new JButton("Change PIN");
+        JLabel message = new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg"));
+        JButton info = new JButton("Account informations");
+        JButton withdraw = new JButton("Withdraw money");
+        JButton deposit = new JButton("Deposit money");
+        JButton balance = new JButton("Check your ballance");
+        JButton exit = new JButton("EXIT");
+        JButton changePin = new JButton("Change PIN");
 
         frame= new JFrame("MAIN MENU");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -98,12 +85,7 @@ public class MenuScreen extends BaseSwingScreen implements MenuInterface{
         dialog.setLayout(new GridLayout(0,1));
         dialog.setSize(300,300);
         JButton confirm = new JButton("OK");
-        confirm.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                dialog.dispose();
-            }
-        });
+        confirm.addActionListener(e -> dialog.dispose());
         dialog.add(new JLabel(new ImageIcon("src\\main\\resources\\D6uioQEX4AIRiu3.jpg")));
         dialog.add(new JLabel());
         dialog.add(new JLabel(message));

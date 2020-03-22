@@ -9,7 +9,6 @@ public class Card {
     private String ownerSurname;
     private String balance;
     private String pin;
-    private final String SEPARATOR = StaticData.SEPARATOR;
 
 
     private Card(Builder builder) {
@@ -40,9 +39,9 @@ public class Card {
 
     public String cardData_forSave(){
         return ownerName +
-                SEPARATOR +
+                StaticData.SEPARATOR +
                 ownerSurname +
-                SEPARATOR +
+                StaticData.SEPARATOR +
                 balance;
     }
 

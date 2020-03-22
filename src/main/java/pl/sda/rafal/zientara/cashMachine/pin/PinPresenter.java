@@ -12,14 +12,9 @@ public class PinPresenter implements PinContract.Presenter {
     private CardLoader cardloader;
     private static final int PIN_LENGTH = StaticData.PIN_LENGTH;
 
-    PinPresenter(PinContract.View view) {
+    PinPresenter(PinScreen pinscreen, PinContract.View view) {
         this.view = view;
-        pinScreen = new PinScreen();
-    }
-
-    PinPresenter(PinScreen pinScreen) {
-        this.view = new PinView(pinScreen, this);
-        this.pinScreen = pinScreen;
+        pinScreen = pinscreen;
     }
 
     @Override

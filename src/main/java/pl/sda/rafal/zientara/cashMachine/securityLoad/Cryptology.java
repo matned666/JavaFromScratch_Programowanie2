@@ -1,7 +1,6 @@
 package pl.sda.rafal.zientara.cashMachine.securityLoad;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -19,11 +18,10 @@ public class Cryptology {
     private SecretKey key;
 
     public boolean checkKey(String text, String key) throws Exception {
-            String generatedKey = keyGenerator(key);
-            String tryMe = decrypt(text, generatedKey);
-            return tryMe != null;
+        String generatedKey = keyGenerator(key);
+        String tryMe = decrypt(text, generatedKey);
+        return tryMe != null;
     }
-
 
     public String encrypt(String unencryptedString, String encryptKey) throws Exception {
         String encryptedString;
@@ -38,7 +36,6 @@ public class Cryptology {
         }
         return encryptedString;
     }
-
 
     public String decrypt(String encryptedString, String decryptKey) throws Exception {
         String decryptedText;
@@ -66,15 +63,15 @@ public class Cryptology {
     private String keyGenerator(String keyBase) {
         StringBuilder keyBuilder = new StringBuilder(keyBase);
         StringBuilder keyBaseBuilder = new StringBuilder(keyBase);
-            for (int i = keyBase.length()-1; i >= 0; i--) {
-                keyBaseBuilder.append(keyBase.charAt(i));
-            }
-            int counter = 0;
-            for (int i = 1 ; i <= KEY_LENGTH; i++){
-                keyBuilder.append(keyBaseBuilder.charAt(counter));
-                counter++;
-                if(counter >= keyBaseBuilder.length()) counter = 0;
-            }
+        for (int i = keyBase.length() - 1; i >= 0; i--) {
+            keyBaseBuilder.append(keyBase.charAt(i));
+        }
+        int counter = 0;
+        for (int i = 1; i <= KEY_LENGTH; i++) {
+            keyBuilder.append(keyBaseBuilder.charAt(counter));
+            counter++;
+            if (counter >= keyBaseBuilder.length()) counter = 0;
+        }
         return String.valueOf(keyBuilder);
     }
 

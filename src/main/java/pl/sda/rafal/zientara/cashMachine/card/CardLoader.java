@@ -17,18 +17,15 @@ public class CardLoader {
     private String separatedEncodedData;
     private Card card;
     private boolean isPassed;
-    private boolean isBlocked;
 
     private int pinCondition;
 
 
     public CardLoader(String cardNumber) throws Exception {
         this.cardNumber = cardNumber;
-        String path = cardNumber;
-        fileOperations = new FileOperations(path);
+        fileOperations = new FileOperations(cardNumber);
         loadedData = fileOperations.readDataFromFile();
         code = new Cryptology();
-        isBlocked = false;
         pinCondition = getCondition();
         getseperatedData();
     }
@@ -36,7 +33,6 @@ public class CardLoader {
     private int getCondition() {
         if(Check.isNumeric(String.valueOf(loadedData.charAt(0)))) return pinCondition = Integer.parseInt(String.valueOf(loadedData.charAt(0)));
         else return 9;
-
     }
 
 /*
@@ -88,7 +84,7 @@ public class CardLoader {
         return isPassed;
     }
 
-    public int getPinCondition() {
+    int getPinCondition() {
         return pinCondition;
     }
 }

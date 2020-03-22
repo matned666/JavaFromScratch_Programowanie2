@@ -5,7 +5,7 @@ public class ChangePinView implements ChangePinContract.View {
     private ChangePinScreen changePinScreen;
 
 
-    public ChangePinView(ChangePinScreen changePinScreen) {
+    ChangePinView(ChangePinScreen changePinScreen) {
         this.changePinScreen = changePinScreen;
     }
 

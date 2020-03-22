@@ -5,43 +5,43 @@ import pl.sda.rafal.zientara.cashMachine.card.Card;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenInterface {
 
     private JButton confirmButton;
-    private JButton backButton;
-
     private JPasswordField oldPassword;
     private JPasswordField newPassword;
     private JPasswordField newPasswordConfirm;
     private JLabel message;
     private JLabel message2;
-
-    private final ChangePinScreenInterface.ScreenListener listener;
-
+    private ChangePinScreenInterface.ScreenListener listener;
     private Card card;
+    private ChangePinContract.Presenter presenter;
 
-
-    private final ChangePinContract.View view = new ChangePinView(this);
-    private final ChangePinContract.Presenter presenter;
+    //Constructor for testing
+    ChangePinScreen(Card card) {
+        this.card = card;
+    }
 
     public ChangePinScreen(ChangePinScreenInterface.ScreenListener listener, Card card) {
         this.listener = listener;
         this.card = card;
-        presenter = new ChangePinPresenter(view,this, card);
+        initialize();
+    }
+
+    private void initialize() {
+        ChangePinContract.View view = new ChangePinView(this);
+        presenter = new ChangePinPresenter(view, this, card);
         confirmButton = new JButton("Confirm");
-        backButton = new JButton("BACK");
+        JButton backButton = new JButton("BACK");
         oldPassword = new JPasswordField();
         newPassword = new JPasswordField();
         newPasswordConfirm = new JPasswordField();
         message = new JLabel("Change your PIN");
         message2 = new JLabel("Fill all 3 text fields correctly to change your PIN");
-
-        frame= new JFrame("Change Pin");
-
+        frame = new JFrame("Change Pin");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
         frame.setLayout(new GridLayout(11, 1));
@@ -63,29 +63,25 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
                 ex.printStackTrace();
             }
         });
-        backButton.addActionListener(e -> backButtonPress() );
+        backButton.addActionListener(e -> backButtonPress());
         view.disableConfirmButton();
         oldPassword.addKeyListener(keyListener());
         newPassword.addKeyListener(keyListener());
         newPasswordConfirm.addKeyListener(keyListener());
-
-
-
     }
 
     @Override
     public void confirmButtonPress() {
         JDialog confirmDialog = new JDialog(frame);
         confirmDialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        confirmDialog.setSize(400,200);
-        confirmDialog.setLayout(new GridLayout(5,1));
+        confirmDialog.setSize(400, 200);
+        confirmDialog.setLayout(new GridLayout(5, 1));
         confirmDialog.add(new JLabel());
         confirmDialog.add(new JLabel("LOL, The PIN has been changed"));
         confirmDialog.add(new JLabel("Don't forget it !!"));
         confirmDialog.add(new JLabel());
         JButton okButton = new JButton("OK");
         confirmDialog.add(okButton);
-
         okButton.addActionListener(e -> listener.onCorrectChangePin());
         confirmDialog.setVisible(true);
     }
@@ -112,7 +108,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
 
     @Override
     public JPasswordField getNewPin() {
-        return newPassword ;
+        return newPassword;
     }
 
     @Override
@@ -135,7 +131,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
         return message2;
     }
 
-    private KeyListener keyListener(){
+    private KeyListener keyListener() {
         return new KeyListener() {
             @Override
             public void keyTyped(KeyEvent e) {
@@ -156,6 +152,4 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
             }
         };
     }
-
-
 }

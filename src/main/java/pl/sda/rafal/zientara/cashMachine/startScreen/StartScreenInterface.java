@@ -8,8 +8,6 @@ public interface StartScreenInterface {
 
     void correctCardNum();
 
-    void wrongCardNum();
-
     JLabel getMessage();
 
     JButton getConfirm();

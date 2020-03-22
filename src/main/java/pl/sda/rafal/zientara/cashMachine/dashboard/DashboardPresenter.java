@@ -31,7 +31,6 @@ public class DashboardPresenter implements DashboardContract.Presenter {
         this.machineStorage = machineStorage;
         this.card = card;
         fO = new FileOperations(card.getCardNumber());
-        System.out.println(card);
     }
 
 

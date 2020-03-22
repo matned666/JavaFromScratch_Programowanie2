@@ -4,7 +4,7 @@ public class StartView implements StartContract.View{
 
     private StartScreen startScreen;
 
-    public StartView(StartScreen startScreen) {
+    StartView(StartScreen startScreen) {
         this.startScreen = startScreen;
     }
 
@@ -21,31 +21,26 @@ public class StartView implements StartContract.View{
     @Override
     public void numberFormatError() {
         startScreen.getMessage().setText("Write only digits");
-
     }
 
     @Override
     public void cardDataError() {
         startScreen.getMessage().setText("Card data was incorrect");
-
     }
 
     @Override
     public void correctCardNumberLength() {
         startScreen.getMessage().setText("OK");
-
     }
 
     @Override
     public void onTooLongCardNumberError() {
         startScreen.getMessage().setText("Too long card number");
-
     }
 
     @Override
     public void onTooShortCardNumberError() {
         startScreen.getMessage().setText("Too short card number");
-
     }
 
     @Override

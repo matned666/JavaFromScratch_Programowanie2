@@ -8,7 +8,7 @@ public class DashboardView implements DashboardContract.View {
 
     private DashboardScreen dashboardScreen;
 
-    public DashboardView(DashboardScreen dashboardScreen) {
+    DashboardView(DashboardScreen dashboardScreen) {
         this.dashboardScreen = dashboardScreen;
 
     }

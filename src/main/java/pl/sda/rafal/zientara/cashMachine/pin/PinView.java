@@ -2,13 +2,10 @@ package pl.sda.rafal.zientara.cashMachine.pin;
 
 public class PinView implements PinContract.View {
 
-    private PinContract.Presenter presenter;
     private PinScreen pinScreen;
 
-
-    public PinView(PinScreen pinScreen, PinContract.Presenter presenter) {
+    PinView(PinScreen pinScreen) {
         this.pinScreen = pinScreen;
-        this.presenter = presenter;
     }
 
     @Override

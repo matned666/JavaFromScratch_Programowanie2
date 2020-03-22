@@ -3,7 +3,6 @@ package pl.sda.rafal.zientara.cashMachine.pin.changePin;
 import pl.sda.rafal.zientara.cashMachine.Check;
 import pl.sda.rafal.zientara.cashMachine.StaticData;
 import pl.sda.rafal.zientara.cashMachine.card.Card;
-import pl.sda.rafal.zientara.cashMachine.card.CardLoader;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.Cryptology;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
 
@@ -18,81 +17,86 @@ public class ChangePinPresenter implements ChangePinContract.Presenter {
     private FileOperations FO;
     private final Cryptology code;
 
-
+    private JPasswordField oldPin;
+    private JPasswordField newPin;
+    private JPasswordField newPin2;
 
       ChangePinPresenter(ChangePinContract.View view, ChangePinScreen changePinScreen, Card card) {
         this.view = view;
         this.changePinScreen = changePinScreen;
         this.card = card;
         code = new Cryptology();
-
-
     }
 
-
     @Override
-    public void onPinTyping(String textField, char typedChar) throws Exception {
-
-          if(!finishStatement(changePinScreen.getNewPinConfirmation()) || !finishStatement(changePinScreen.getNewPin()) || !finishStatement(changePinScreen.getOldPin()) && !finishStatment()) {
-              if (ifStatements(1, changePinScreen.getOldPin()) || ifStatements(1, changePinScreen.getNewPin()) || ifStatements(1, changePinScreen.getNewPinConfirmation())) {
-                  view.showTooShortPinError(textField);
-                  view.disableConfirmButton();
-              } else if (ifStatements(2, changePinScreen.getOldPin()) || ifStatements(2, changePinScreen.getNewPin()) || ifStatements(2, changePinScreen.getNewPinConfirmation())) {
-                  view.showTooLongPinError(textField);
-                  view.disableConfirmButton();
-              } else if (ifStatements(3, changePinScreen.getOldPin()) || ifStatements(3, changePinScreen.getNewPin()) || ifStatements(3, changePinScreen.getNewPinConfirmation())) {
-                  view.showOnlyDigitsError(textField);
-                  view.disableConfirmButton();
-              }
-
-              if (!changePinScreen.getNewPin().getText().equals(changePinScreen.getNewPinConfirmation().getText())) {
+    public void onPinTyping(String pin, char typedChar) throws Exception {
+          refreshVariables();
+          if(onIncorrectPasswordFieldsFill()) {
+              if(areNewPinAndConfirmationNOTEqual()){
                   view.onNotEqualPinConfirm();
                   view.disableConfirmButton();
-              } else if (changePinScreen.getNewPin().getText() == null || changePinScreen.getNewPinConfirmation().getText() == null) {
-                  view.disableConfirmButton();
-              } else if (changePinScreen.getOldPin().getText() == null) {
-                  view.disableConfirmButton();
               }
-
+              if (onAnyFieldTooShort()) {
+                  view.showTooShortPinError(pin);
+                  view.disableConfirmButton();
+              }else if (onAnyFileldTooLong()) {
+                  view.showTooLongPinError(pin);
+                  view.disableConfirmButton();
+              }else view.hideError();
           }else{
-              if(typedChar == 10) onConfirm();
               view.hideDifferentPinsError();
               view.enableConfirmButton();
               view.hideError();
-
+              if(typedChar == 10) onConfirm();
           }
+    }
 
+    private boolean onAnyFileldTooLong() {
+        return isTooLong(oldPin) || isTooLong(newPin) || isTooLong(newPin2);
+    }
+
+    private boolean onAnyFieldTooShort() {
+        return isTooShort(oldPin) || isTooShort(newPin) || isTooShort(newPin2) ;
+    }
+
+    private boolean onIncorrectPasswordFieldsFill() {
+        return isNOTCorrect(oldPin) || isNOTCorrect(newPin) || isNOTCorrect(newPin2) || areNewPinAndConfirmationNOTEqual();
     }
 
     @Override
     public void onConfirm() throws Exception {
         FO = new FileOperations((card.getCardNumber()));
           if(pinIsCorrect()) {
-              FO.writeDataToFile("1"+code.encrypt(card.cardData_forSave(), StaticData.BANK_ENCRYPT_CODE + changePinScreen.getNewPin().getText()));
+              FO.writeDataToFile("1"+code.encrypt(card.cardData_forSave(), StaticData.BANK_ENCRYPT_CODE + Check.getPassword(changePinScreen.getNewPin())));
               view.onCorrectPin();
           }else{
               view.onWrongOldPin();
           }
     }
 
+    private boolean isTooShort(JPasswordField pas){
+        return Check.getPassword(pas).trim().length() < PIN_LENGTH;
+    }
+
+  private boolean isTooLong(JPasswordField pas){
+      return Check.getPassword(pas).trim().length() > PIN_LENGTH;
+    }
+
+    private boolean isNOTCorrect(JPasswordField pas){
+        return (pas.getPassword().length != StaticData.PIN_LENGTH) || (!Check.isNumeric(Check.getPassword(pas)));
+    }
+
+    private boolean areNewPinAndConfirmationNOTEqual(){
+        return !Check.getPassword(newPin).equals(Check.getPassword(newPin2));
+    }
+
+    private void refreshVariables(){
+        oldPin = changePinScreen.getOldPin();
+        newPin = changePinScreen.getNewPin();
+        newPin2 = changePinScreen.getNewPinConfirmation();
+    }
+
     private boolean pinIsCorrect() throws Exception {
-          return code.checkKey(FO.readDataFromFile().substring(1),StaticData.BANK_ENCRYPT_CODE+changePinScreen.getOldPin().getText());
+          return code.checkKey(FO.readDataFromFile().substring(1),StaticData.BANK_ENCRYPT_CODE+Check.getPassword(changePinScreen.getOldPin()));
     }
-
-    private boolean ifStatements(int id, JPasswordField pas){
-          if(id == 1) return pas.getText().trim().length() < PIN_LENGTH && Check.isNumeric(pas.getText().trim());
-          else if(id == 2) return pas.getText().trim().length() > PIN_LENGTH  && Check.isNumeric(pas.getText());
-          else if(id == 3) return !Check.isNumeric(pas.getText());
-          else return false;
-    }
-
-    private boolean finishStatement(JPasswordField pas){
-          return (pas.getPassword().length == StaticData.PIN_LENGTH)&&(Check.isNumeric(pas.getText()));
-    }
-
-    private boolean finishStatment(){
-          return changePinScreen.getNewPin().getText().equals(changePinScreen.getNewPinConfirmation().getText());
-    }
-
-
 }

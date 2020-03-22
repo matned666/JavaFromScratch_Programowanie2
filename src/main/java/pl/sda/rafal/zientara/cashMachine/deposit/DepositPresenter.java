@@ -2,15 +2,11 @@ package pl.sda.rafal.zientara.cashMachine.deposit;
 
 import pl.sda.rafal.zientara.cashMachine.StaticData;
 import pl.sda.rafal.zientara.cashMachine.card.Card;
-import pl.sda.rafal.zientara.cashMachine.dashboard.DashboardContract;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
-import pl.sda.rafal.zientara.cashMachine.model.CashComparator;
 import pl.sda.rafal.zientara.cashMachine.model.CashMachineStorage;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.Cryptology;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -29,7 +25,7 @@ public class DepositPresenter implements DepositContract.Presenter {
     private final Cryptology code = new Cryptology();
     private LinkedList<Cash> givenMoneyNotes;
 
-    public DepositPresenter(DepositContract.View view, CashMachineStorage machineStorage,Card card) {
+    DepositPresenter(DepositContract.View view, CashMachineStorage machineStorage,Card card) {
         this.view = view;
         this.machineStorage = machineStorage;
         this.card = card;

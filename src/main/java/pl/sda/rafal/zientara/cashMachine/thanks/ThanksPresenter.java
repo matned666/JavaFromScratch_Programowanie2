@@ -10,7 +10,7 @@ public class ThanksPresenter implements ThanksContract.Presenter {
     private final List<Cash> money;
     private List<Cash> givenMoneyNotes;
 
-    public ThanksPresenter(ThanksContract.View view, List<Cash> money) {
+    ThanksPresenter(ThanksContract.View view, List<Cash> money) {
         this.view = view;
         this.money = money;
         givenMoneyNotes();

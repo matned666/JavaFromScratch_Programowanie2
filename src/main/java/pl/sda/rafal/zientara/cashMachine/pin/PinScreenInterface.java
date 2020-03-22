@@ -17,7 +17,7 @@ public interface PinScreenInterface {
 
     String getCardNumber();
 
-    public interface ScreenListener {
+    interface ScreenListener {
         //info
         void onCorrectPin(Card card);
 

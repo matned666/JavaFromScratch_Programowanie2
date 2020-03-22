@@ -3,6 +3,7 @@ package pl.sda.rafal.zientara.cashMachine.dashboard;
 import pl.sda.rafal.zientara.cashMachine.BaseSwingScreen;
 import pl.sda.rafal.zientara.cashMachine.card.Card;
 import pl.sda.rafal.zientara.cashMachine.model.Cash;
+import pl.sda.rafal.zientara.cashMachine.model.CashMachineStorage;
 import pl.sda.rafal.zientara.cashMachine.model.RandomMachineStorage;
 
 import javax.swing.*;
@@ -18,13 +19,13 @@ public class DashboardScreen extends BaseSwingScreen implements DashboardScreenI
     private final JButton confirm;
     private Card card;
 
-    private final DashboardContract.View view = new DashboardView(this);
     private final DashboardContract.Presenter presenter;
     private final ScreenListener listener;
 
-    public DashboardScreen(ScreenListener listener, Card card) {
+    public DashboardScreen(ScreenListener listener, Card card, CashMachineStorage storage) {
         this.listener = listener;
-        presenter = new DashboardPresenter(view, new RandomMachineStorage(),card);
+        DashboardContract.View view = new DashboardView(this);
+        presenter = new DashboardPresenter(view, storage ,card);
         frame = new JFrame("Insert amount of cash");
         frame.setSize(600, 400);
         frame.setLayout(new GridLayout(0, 1));

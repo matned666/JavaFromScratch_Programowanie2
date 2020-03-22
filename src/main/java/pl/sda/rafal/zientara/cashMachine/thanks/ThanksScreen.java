@@ -11,7 +11,6 @@ import java.util.List;
 public class ThanksScreen extends BaseSwingScreen implements ThanksContract.View {
     private final JLabel message;
     private final JLabel moneyInfo;
-    private final JButton confirm;
     private final ScreenListener listener;
     private final ThanksContract.Presenter presenter;
 
@@ -30,10 +29,8 @@ public class ThanksScreen extends BaseSwingScreen implements ThanksContract.View
         moneyInfo = new JLabel();
         frame.add(moneyInfo);
 
-        confirm = new JButton("Ok Thanks! :D");
-        confirm.addActionListener(e -> {
-            presenter.okClicked();
-        });
+        JButton confirm = new JButton("Ok Thanks! :D");
+        confirm.addActionListener(e -> presenter.okClicked());
         frame.add(confirm);
         presenter.init();
 
