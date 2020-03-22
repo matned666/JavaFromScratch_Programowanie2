@@ -16,12 +16,12 @@ public class ChangePinView implements ChangePinContract.View {
     }
 
     @Override
-    public void emptyOldPinError(String textField) {
+    public void emptyOldPinError() {
         changePinScreen.getMessage2().setText("Write your old pin to continue");
     }
 
     @Override
-    public void emptyNewPinError(String textField) {
+    public void emptyNewPinError() {
         changePinScreen.getMessage2().setText("Write your new pin");
     }
 
@@ -46,18 +46,18 @@ public class ChangePinView implements ChangePinContract.View {
     }
 
     @Override
-    public void showTooShortPinError(String textField) {
-        changePinScreen.getMessage1().setText("ERROR - Too short pin on " + textField);
+    public void showTooShortPinError() {
+        changePinScreen.getMessage1().setText("ERROR - Too short pin");
     }
 
     @Override
-    public void showTooLongPinError(String textField) {
-        changePinScreen.getMessage1().setText("ERROR - Too long pin on " + textField);
+    public void showTooLongPinError() {
+        changePinScreen.getMessage1().setText("ERROR - Too long pin");
     }
 
     @Override
-    public void showOnlyDigitsError(String textField) {
-        changePinScreen.getMessage1().setText("ERROR - Write only numeric on " + textField);
+    public void showOnlyDigitsError() {
+        changePinScreen.getMessage1().setText("ERROR - Write only numeric");
     }
 
     @Override

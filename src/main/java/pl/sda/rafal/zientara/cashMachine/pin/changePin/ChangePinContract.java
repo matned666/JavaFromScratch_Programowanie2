@@ -7,22 +7,22 @@ public class ChangePinContract {
         void onWrongOldPin();
 
         void onNotEqualPinConfirm();
-        void emptyOldPinError(String textField);
-        void emptyNewPinError(String textField);
+        void emptyOldPinError();
+        void emptyNewPinError();
 
         void disableConfirmButton();
         void enableConfirmButton();
 
         //errors
-        void showTooShortPinError(String textField);
-        void showTooLongPinError(String textField);
-        void showOnlyDigitsError(String textField);
+        void showTooShortPinError();
+        void showTooLongPinError();
+        void showOnlyDigitsError();
         void hideError();
         void hideDifferentPinsError();
     }
 
     public  interface Presenter{
-        void onPinTyping(String TextField, char typedChar) throws Exception;
+        void onPinTyping(char typedChar) throws Exception;
 
         void onConfirm() throws Exception;
 

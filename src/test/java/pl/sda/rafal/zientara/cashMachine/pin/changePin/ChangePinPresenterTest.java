@@ -2,6 +2,7 @@ package pl.sda.rafal.zientara.cashMachine.pin.changePin;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import pl.sda.rafal.zientara.cashMachine.Check;
 import pl.sda.rafal.zientara.cashMachine.StaticData;
 import pl.sda.rafal.zientara.cashMachine.card.Card;
 
@@ -9,6 +10,7 @@ import pl.sda.rafal.zientara.cashMachine.securityLoad.Cryptology;
 import pl.sda.rafal.zientara.cashMachine.securityLoad.FileOperations;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 class ChangePinPresenterTest {
 
@@ -37,14 +39,17 @@ class ChangePinPresenterTest {
 
 // TODO ALL TESTS
 
-//    @Test
-//    void changePinCorrectly() throws Exception {
-////        pinscr.getOldPin().
-//
-////        verify(view).enableConfirmButton();
-////        verify(view).hideError();
-//
-//    }
+    @Test
+    void changePinCorrectly() throws Exception {
+        pinscr.setNewPassword("1234");
+        pinscr.setNewPassword("4444");
+        pinscr.setNewPasswordConfirm("4444");
+
+        presenter.onPinTyping((char) 10);
+
+        verify(view).enableConfirmButton();
+        verify(view).hideError();
+    }
 
      @Test
     void notCorrectOldPin(){
@@ -62,8 +67,13 @@ class ChangePinPresenterTest {
     }
 
      @Test
-    void onTypeNonNumericTypeOnNewPinField(){
+    void onTypeNonNumericTypeOnNewPinField() throws Exception {
+         pinscr.setNewPasswordConfirm("44oi");
 
+         presenter.onPinTyping((char) 10);
+
+         verify(view).showOnlyDigitsError();
+         verify(view).disableConfirmButton();
     }
 
      @Test
@@ -72,13 +82,14 @@ class ChangePinPresenterTest {
     }
 
      @Test
-    void onTypeDifferentAmountOfTypesThanCorrectLengthOfPin(){
+    void onTypeDifferentAmountOfTypesThanCorrectLengthOfPin() throws Exception {
+         pinscr.setNewPassword("1234");
+         pinscr.setNewPassword("4444");
+         pinscr.setNewPasswordConfirm("44");
 
-    }
+         presenter.onPinTyping((char) 10);
 
-     @Test
-    void onCorrectPasswordConfirmation(){
-
+         verify(view).onNotEqualPinConfirm();
     }
 
 }

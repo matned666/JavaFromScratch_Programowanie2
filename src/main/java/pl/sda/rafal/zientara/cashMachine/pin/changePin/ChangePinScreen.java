@@ -23,6 +23,7 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
     //Constructor for testing
     ChangePinScreen(Card card) {
         this.card = card;
+        initialize();
     }
 
     public ChangePinScreen(ChangePinScreenInterface.ScreenListener listener, Card card) {
@@ -145,11 +146,26 @@ public class ChangePinScreen extends BaseSwingScreen implements ChangePinScreenI
             @Override
             public void keyReleased(KeyEvent e) {
                 try {
-                    presenter.onPinTyping(e.getClass().toString(), e.getKeyChar());
+                    presenter.onPinTyping(e.getKeyChar());
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }
         };
+    }
+
+
+    // setters for Testing
+
+    public void setOldPassword(String oldPassword) {
+        this.oldPassword.setText(oldPassword);
+    }
+
+    public void setNewPassword(String newPassword) {
+        this.newPassword.setText(newPassword);
+    }
+
+    public void setNewPasswordConfirm(String newPasswordConfirm) {
+        this.newPasswordConfirm.setText(newPasswordConfirm);
     }
 }
